@@ -1,57 +1,172 @@
 const blue = "#25b7ff";
 const gridColor = "rgba(179, 195, 219, 0.14)";
 const textColor = "#aeb8c7";
-
-const charts = [
-  {
-    id: "valuationCountChart",
-    type: "vertical",
-    max: 20,
-    labels: ["20亿以下", "20-50亿", "50-100亿", "100-150亿", "150-200亿", "200-250亿", "400-450亿"],
-    values: [16, 13, 15, 7, 5, 9, 1],
-  },
-  {
-    id: "fundingRangeChart",
-    type: "vertical",
-    max: 30,
-    labels: ["少于10亿", "10-20亿", "20-30亿", "30-40亿", "40-50亿", "50-60亿", "60-70亿", "70-80亿", "未知"],
-    values: [25, 17, 10, 4, 2, 3, 3, 1, 1],
-  },
-  {
-    id: "categoryFundingChart",
-    type: "vertical",
-    max: 40,
-    labels: ["全栈", "物理仿真", "世界模型", "灵巧手", "具身大脑", "触觉传感器", "数据采集", "机械臂", "本体"],
-    values: [35.2, 15.3, 13.7, 13.7, 13.3, 13.2, 8.6, 7.9, 6.8],
-  },
-  {
-    id: "categoryValuationChart",
-    type: "vertical",
-    max: 500,
-    labels: ["全栈", "物理仿真", "具身大脑", "灵巧手", "触觉传感器", "世界模型", "本体", "机械臂", "数据采集"],
-    values: [430, 132.3, 76, 67.5, 61.2, 60, 57, 39.1, 29],
-  },
-  {
-    id: "latestRoundChart",
-    type: "horizontal",
-    max: 450,
-    labels: ["鹏行智能", "银河通用", "它石智航", "银河通用", "原力灵机", "星海图", "自变量机器人", "强脑科技", "卜拉格", "智象未来", "乐聚", "灵心巧手", "千寻智能", "逐际动力", "大晓机器人", "无界动力", "灵初智能", "光轮智能", "极佳视界", "星动纪元"],
-    values: [430, 210, 200, 200, 200, 200, 200, 120, 100, 100, 63, 50, 31, 25, 20, 20, 20, 15.7, 15, 15],
-  },
-  {
-    id: "fullStackChart",
-    type: "horizontal",
-    max: 220,
-    labels: ["银河通用", "原力灵机", "极佳视界", "星动纪元", "星海图", "千寻智能", "自变量机器人", "智平方", "它石智航", "逐际动力", "智元机器人", "星尘智能", "墨奇", "思灵", "萝博派对", "乐聚", "魔法原子"],
-    values: [210, 200, 200, 200, 200, 200, 200, 200, 180, 150, 150, 100, 70, 69, 50, 43.3, 35],
-  },
-];
+const rows = Array.isArray(window.dashboardData) ? window.dashboardData : [];
 
 const tooltip = document.createElement("div");
 tooltip.className = "chart-tooltip";
 document.body.appendChild(tooltip);
 
 const hitAreas = new Map();
+
+function formatNumber(value, digits = 1) {
+  if (!Number.isFinite(value)) return "--";
+  const rounded = Number(value.toFixed(digits));
+  return rounded.toLocaleString("zh-CN");
+}
+
+function sumBy(items, field) {
+  return items.reduce((total, item) => total + (Number(item[field]) || 0), 0);
+}
+
+function groupCount(items, field) {
+  return items.reduce((groups, item) => {
+    const key = item[field] || "未知";
+    groups.set(key, (groups.get(key) || 0) + 1);
+    return groups;
+  }, new Map());
+}
+
+function groupAverage(items, groupField, valueField) {
+  const groups = new Map();
+  items.forEach((item) => {
+    const value = Number(item[valueField]);
+    if (!Number.isFinite(value) || value <= 0) return;
+    const key = item[groupField] || "未知";
+    const current = groups.get(key) || { total: 0, count: 0 };
+    current.total += value;
+    current.count += 1;
+    groups.set(key, current);
+  });
+
+  return Array.from(groups, ([label, stats]) => ({
+    label,
+    value: stats.total / stats.count,
+  })).sort((a, b) => b.value - a.value);
+}
+
+function rangeStart(label) {
+  if (label === "未知") return Number.MAX_SAFE_INTEGER;
+  const match = String(label).match(/\d+(\.\d+)?/);
+  return match ? Number(match[0]) : Number.MAX_SAFE_INTEGER - 1;
+}
+
+function toChartSeries(items, maxItems = Infinity) {
+  const limited = items.slice(0, maxItems);
+  return {
+    labels: limited.map((item) => item.label),
+    values: limited.map((item) => Number(item.value.toFixed(1))),
+  };
+}
+
+function makeCountSeries(field) {
+  return toChartSeries(
+    Array.from(groupCount(rows, field), ([label, value]) => ({ label, value }))
+      .sort((a, b) => rangeStart(a.label) - rangeStart(b.label)),
+  );
+}
+
+function makeTopSeries(field, categoryFilter, limit = 20) {
+  return toChartSeries(
+    rows
+      .filter((item) => !categoryFilter || item.companyCategory === categoryFilter)
+      .map((item) => ({
+        label: item.companyName,
+        value: Number(item[field]) || 0,
+      }))
+      .filter((item) => item.value > 0)
+      .sort((a, b) => b.value - a.value),
+    limit,
+  );
+}
+
+function niceMax(values) {
+  const max = Math.max(...values, 1);
+  if (max <= 10) return Math.ceil(max / 2) * 2;
+  if (max <= 100) return Math.ceil(max / 10) * 10;
+  return Math.ceil(max / 50) * 50;
+}
+
+function buildCharts() {
+  const valuationCount = makeCountSeries("valuationRange");
+  const fundingRange = makeCountSeries("cumulativeFundingRange");
+  const categoryFunding = toChartSeries(groupAverage(rows, "companyCategory", "cumulativeFunding"));
+  const categoryValuation = toChartSeries(groupAverage(rows, "companyCategory", "latestValuation"));
+  const latestRound = makeTopSeries("latestRoundAmount");
+  const fullStack = makeTopSeries("latestValuation", "全栈");
+
+  return [
+    {
+      id: "valuationCountChart",
+      type: "vertical",
+      max: niceMax(valuationCount.values),
+      ...valuationCount,
+    },
+    {
+      id: "fundingRangeChart",
+      type: "vertical",
+      max: niceMax(fundingRange.values),
+      ...fundingRange,
+    },
+    {
+      id: "categoryFundingChart",
+      type: "vertical",
+      max: niceMax(categoryFunding.values),
+      ...categoryFunding,
+    },
+    {
+      id: "latestRoundChart",
+      type: "horizontal",
+      max: niceMax(latestRound.values),
+      ...latestRound,
+    },
+    {
+      id: "categoryValuationChart",
+      type: "vertical",
+      max: niceMax(categoryValuation.values),
+      ...categoryValuation,
+    },
+    {
+      id: "fullStackChart",
+      type: "horizontal",
+      max: niceMax(fullStack.values),
+      ...fullStack,
+    },
+  ];
+}
+
+const charts = buildCharts();
+
+function updateKpis() {
+  const totalFunding = sumBy(rows, "cumulativeFunding");
+  const categories = new Set(rows.map((item) => item.companyCategory).filter(Boolean));
+  const top20 = rows
+    .map((item) => Number(item.latestRoundAmount) || 0)
+    .filter((value) => value > 0)
+    .sort((a, b) => b - a)
+    .slice(0, 20);
+  const top20Average = top20.length ? top20.reduce((total, value) => total + value, 0) / top20.length : 0;
+  const activeRange = Array.from(groupCount(rows, "cumulativeFundingRange"), ([label, count]) => ({ label, count }))
+    .sort((a, b) => b.count - a.count)[0];
+
+  document.getElementById("totalFunding").textContent = formatNumber(totalFunding, 0);
+  document.getElementById("totalFundingSub").textContent = "亿元 RMB 累计融资";
+  document.getElementById("companyCount").textContent = rows.length.toLocaleString("zh-CN");
+  document.getElementById("categoryCount").textContent = `覆盖 ${categories.size} 个细分类别`;
+  document.getElementById("top20Average").textContent = formatNumber(top20Average, 1);
+  document.getElementById("activeRange").textContent = activeRange ? activeRange.label : "--";
+  document.getElementById("activeRangeCount").textContent = activeRange ? `${activeRange.count} 家公司` : "-- 家公司";
+
+  const secondRange = Array.from(groupCount(rows, "cumulativeFundingRange"), ([label, count]) => ({ label, count }))
+    .sort((a, b) => b.count - a.count)[1];
+  const insight = activeRange && secondRange
+    ? `当前样本共 ${rows.length} 家公司，累计融资额最高活跃区间为 ${activeRange.label}，其次为 ${secondRange.label}；Top20 最新融资均值为 ${formatNumber(top20Average, 1)} 亿元。`
+    : "融资数据已接入，后续可继续加入筛选、公司详情和趋势对比。";
+  document.getElementById("insightText").innerHTML = insight.replace(
+    formatNumber(top20Average, 1),
+    `<b>${formatNumber(top20Average, 1)}</b>`,
+  );
+}
 
 function setupCanvas(canvas) {
   const rect = canvas.getBoundingClientRect();
@@ -93,6 +208,13 @@ function drawGrid(ctx, left, top, width, height, max, steps = 4) {
   }
 }
 
+function drawNoData(ctx, width, height) {
+  ctx.fillStyle = textColor;
+  ctx.font = "15px Inter, Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("暂无可展示数据", width / 2, height / 2);
+}
+
 function drawVerticalChart(config) {
   const canvas = document.getElementById(config.id);
   const { ctx, width, height } = setupCanvas(canvas);
@@ -105,10 +227,16 @@ function drawVerticalChart(config) {
   const chartHeight = height - top - bottom;
 
   ctx.clearRect(0, 0, width, height);
+  if (!config.values.length) {
+    drawNoData(ctx, width, height);
+    hitAreas.set(config.id, areas);
+    return;
+  }
+
   drawGrid(ctx, left, top, chartWidth, chartHeight, config.max);
 
-  const gap = Math.max(16, chartWidth / config.values.length * 0.36);
-  const barWidth = Math.max(18, (chartWidth - gap * (config.values.length - 1)) / config.values.length);
+  const gap = Math.max(12, (chartWidth / config.values.length) * 0.32);
+  const barWidth = Math.max(16, (chartWidth - gap * (config.values.length - 1)) / config.values.length);
 
   config.values.forEach((value, index) => {
     const x = left + index * (barWidth + gap);
@@ -125,14 +253,14 @@ function drawVerticalChart(config) {
     ctx.textAlign = "center";
     ctx.fillStyle = barHeight > 34 ? "#102032" : blue;
     ctx.font = "15px Inter, Arial";
-    ctx.fillText(value, x + barWidth / 2, y + (barHeight > 34 ? 22 : -8));
+    ctx.fillText(formatNumber(value, 1), x + barWidth / 2, y + (barHeight > 34 ? 22 : -8));
 
     ctx.fillStyle = textColor;
     ctx.font = "14px Inter, Arial";
     const label = config.labels[index];
     ctx.save();
-    if (config.labels.length > 8) {
-      ctx.translate(x + barWidth / 2, top + chartHeight + 38);
+    if (config.labels.length > 8 || label.length > 5) {
+      ctx.translate(x + barWidth / 2, top + chartHeight + 40);
       ctx.rotate(-Math.PI / 7);
       ctx.fillText(label, 0, 0);
     } else {
@@ -151,14 +279,20 @@ function drawHorizontalChart(config) {
   const { ctx, width, height } = setupCanvas(canvas);
   const areas = [];
   const left = 116;
-  const right = 24;
+  const right = 54;
   const top = 18;
   const bottom = 30;
   const chartWidth = width - left - right;
   const chartHeight = height - top - bottom;
-  const rowHeight = chartHeight / config.values.length;
 
   ctx.clearRect(0, 0, width, height);
+  if (!config.values.length) {
+    drawNoData(ctx, width, height);
+    hitAreas.set(config.id, areas);
+    return;
+  }
+
+  const rowHeight = chartHeight / config.values.length;
   ctx.strokeStyle = gridColor;
   ctx.fillStyle = textColor;
   ctx.font = "13px Inter, Arial";
@@ -175,7 +309,7 @@ function drawHorizontalChart(config) {
   config.values.forEach((value, index) => {
     const y = top + index * rowHeight + rowHeight * 0.24;
     const barHeight = Math.max(7, rowHeight * 0.42);
-    const barWidth = (value / config.max) * chartWidth;
+    const barWidth = Math.max(7, (value / config.max) * chartWidth);
 
     ctx.fillStyle = textColor;
     ctx.textAlign = "right";
@@ -188,7 +322,7 @@ function drawHorizontalChart(config) {
 
     ctx.fillStyle = blue;
     ctx.textAlign = "left";
-    ctx.fillText(value.toFixed(1), left + barWidth + 8, y + barHeight + 2);
+    ctx.fillText(formatNumber(value, 1), left + barWidth + 8, y + barHeight + 2);
     areas.push({ x: left, y, w: barWidth, h: barHeight, label: config.labels[index], value });
   });
 
@@ -218,7 +352,7 @@ function attachTooltips() {
         return;
       }
 
-      tooltip.innerHTML = `${area.label}<br><span>数值</span><br><b>${area.value}</b>`;
+      tooltip.innerHTML = `${area.label}<br><span>数值</span><br><b>${formatNumber(area.value, 1)}</b>`;
       tooltip.style.left = `${event.clientX + 18}px`;
       tooltip.style.top = `${event.clientY - 28}px`;
       tooltip.style.display = "block";
@@ -230,6 +364,7 @@ function attachTooltips() {
   });
 }
 
+updateKpis();
 drawAll();
 attachTooltips();
 window.addEventListener("resize", drawAll);
