@@ -7,97 +7,125 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="shell">
-      <header class="topbar">
+    <main class="dashboard">
+      <header class="hero">
         <div>
-          <p class="eyebrow">Portfolio Monitor</p>
-          <h1>投资数据看板</h1>
+          <p class="eyebrow">Investment Intelligence</p>
+          <h1>融资数据监测看板</h1>
         </div>
-        <div class="toolbar" aria-label="时间范围">
-          <button class="range-button active" data-range="30">30天</button>
-          <button class="range-button" data-range="90">90天</button>
-          <button class="range-button" data-range="180">180天</button>
+        <div class="actions">
+          <button class="ghost-button" type="button">智能分析</button>
+          <button class="primary-button" type="button">订阅提醒</button>
         </div>
       </header>
 
-      <section class="metrics" aria-label="关键指标">
-        <article class="metric">
-          <span>组合总额</span>
-          <strong id="totalValue">$128,430</strong>
-          <small class="up">+8.4% 本期</small>
+      <section class="kpi-grid" aria-label="关键指标">
+        <article class="kpi-card">
+          <span>总计累计融资总额（亿元）</span>
+          <strong>1,180</strong>
+          <small>较上月 +8.6%</small>
         </article>
-        <article class="metric">
-          <span>今日收益</span>
-          <strong id="dailyGain">$1,285</strong>
-          <small class="up">+1.01%</small>
+        <article class="kpi-card">
+          <span>统计具身智能公司总数</span>
+          <strong>66</strong>
+          <small>覆盖 9 个细分类别</small>
         </article>
-        <article class="metric">
-          <span>现金仓位</span>
-          <strong>$12,600</strong>
-          <small>9.8% 可用</small>
+        <article class="kpi-card">
+          <span>最新融资额 Top20 均值</span>
+          <strong>92.4</strong>
+          <small>亿元 RMB</small>
         </article>
-        <article class="metric">
-          <span>风险评分</span>
-          <strong>62</strong>
-          <small>中等偏高</small>
+        <article class="kpi-card">
+          <span>高活跃融资区间</span>
+          <strong>少于10亿</strong>
+          <small>25 家公司</small>
         </article>
       </section>
 
-      <section class="grid">
-        <article class="panel trend-panel">
+      <section class="board">
+        <article class="panel panel-wide">
           <div class="panel-head">
             <div>
-              <h2>资产净值趋势</h2>
-              <p>模拟数据，用于展示看板结构</p>
+              <h2>估值区间公司数量</h2>
+              <p><span class="legend-dot"></span>计数</p>
             </div>
-            <span id="rangeLabel">最近30天</span>
           </div>
-          <canvas id="trendChart" height="260" aria-label="资产净值折线图"></canvas>
+          <canvas id="valuationCountChart" height="360"></canvas>
         </article>
 
         <article class="panel">
           <div class="panel-head">
             <div>
-              <h2>资产分布</h2>
-              <p>按类别统计持仓</p>
+              <h2>累计融资额区间公司数量</h2>
+              <p><span class="legend-dot"></span>计数</p>
+            </div>
+            <button class="mini-ai" type="button">智能分析</button>
+          </div>
+          <canvas id="fundingRangeChart" height="360"></canvas>
+        </article>
+
+        <article class="panel panel-wide">
+          <div class="panel-head">
+            <div>
+              <h2>各公司分类平均累计融资额</h2>
+              <p><span class="legend-dot"></span>累计融资额_亿元RMB</p>
             </div>
           </div>
-          <div class="allocation-list" id="allocationList"></div>
+          <canvas id="categoryFundingChart" height="340"></canvas>
         </article>
 
         <article class="panel">
           <div class="panel-head">
             <div>
-              <h2>行业敞口</h2>
-              <p>当前组合占比</p>
+              <h2>最新融资额 Top20</h2>
+              <p><span class="legend-dot"></span>最新轮金额_亿元RMB</p>
             </div>
           </div>
-          <div class="bar-list" id="sectorList"></div>
+          <canvas id="latestRoundChart" height="390"></canvas>
         </article>
 
-        <article class="panel table-panel">
+        <article class="panel">
           <div class="panel-head">
             <div>
-              <h2>近期交易</h2>
-              <p>样例交易流水</p>
+              <h2>各公司分类平均估值</h2>
+              <p><span class="legend-dot"></span>最新估值_亿元RMB</p>
             </div>
           </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>日期</th>
-                  <th>标的</th>
-                  <th>方向</th>
-                  <th>金额</th>
-                  <th>状态</th>
-                </tr>
-              </thead>
-              <tbody id="tradeRows"></tbody>
-            </table>
+          <canvas id="categoryValuationChart" height="330"></canvas>
+        </article>
+
+        <article class="panel panel-wide">
+          <div class="panel-head">
+            <div>
+              <h2>全栈厂估值</h2>
+              <p><span class="legend-dot"></span>最新估值_亿元RMB</p>
+            </div>
           </div>
+          <canvas id="fullStackChart" height="330"></canvas>
         </article>
       </section>
+
+      <aside class="insight-card" aria-label="数据提醒">
+        <h2>订阅你的专属数据提醒</h2>
+        <p>灵活设置关注内容和分析需求，定期掌握融资与估值变化</p>
+        <div class="assistant-card">
+          <span class="spark">✦</span>
+          <strong>数据分析助手</strong>
+          <p>近 7 天融资额增长 <b>8.6%</b>，高活跃区间集中在少于10亿和10-20亿，需要重点关注早期项目。</p>
+          <div class="mini-chart">
+            <span style="height:38%"></span>
+            <span style="height:64%"></span>
+            <span style="height:78%"></span>
+            <span style="height:52%"></span>
+            <span style="height:76%"></span>
+            <span style="height:62%"></span>
+          </div>
+        </div>
+        <div class="insight-actions">
+          <button class="light-button" type="button">稍后再说</button>
+          <button class="primary-button" type="button">立即订阅</button>
+        </div>
+      </aside>
     </main>
 
     <script src="script.js"></script>
