@@ -1,6 +1,8 @@
 # Investment Data Dashboard
 
-一个深色大屏风格的静态融资数据看板样板，使用 HTML、CSS 和 JavaScript 制作。
+一个深色大屏风格的静态融资数据看板，使用 HTML、CSS 和 JavaScript 制作。
+
+数据来源为 `具身公司融资看板.xlsx` 中的 `【作图】具身公司融资明细` 工作表，并转换为静态 `data.js` 文件供网页读取。
 
 ## 功能
 
@@ -13,6 +15,6 @@
 
 ## 使用方式
 
-直接打开 `index.html` 即可查看。
+直接打开 `index.html` 即可查看，也可以通过 GitHub Pages 发布。
 
-后续可以把 `script.js` 里的模拟数据替换成真实融资或投资数据。
+后续如果 Excel 数据更新，只需要重新生成 `data.js`，网页图表会自动按新数据计算。
