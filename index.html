@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Investment Data Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Portfolio Monitor</p>
+          <h1>投资数据看板</h1>
+        </div>
+        <div class="toolbar" aria-label="时间范围">
+          <button class="range-button active" data-range="30">30天</button>
+          <button class="range-button" data-range="90">90天</button>
+          <button class="range-button" data-range="180">180天</button>
+        </div>
+      </header>
+
+      <section class="metrics" aria-label="关键指标">
+        <article class="metric">
+          <span>组合总额</span>
+          <strong id="totalValue">$128,430</strong>
+          <small class="up">+8.4% 本期</small>
+        </article>
+        <article class="metric">
+          <span>今日收益</span>
+          <strong id="dailyGain">$1,285</strong>
+          <small class="up">+1.01%</small>
+        </article>
+        <article class="metric">
+          <span>现金仓位</span>
+          <strong>$12,600</strong>
+          <small>9.8% 可用</small>
+        </article>
+        <article class="metric">
+          <span>风险评分</span>
+          <strong>62</strong>
+          <small>中等偏高</small>
+        </article>
+      </section>
+
+      <section class="grid">
+        <article class="panel trend-panel">
+          <div class="panel-head">
+            <div>
+              <h2>资产净值趋势</h2>
+              <p>模拟数据，用于展示看板结构</p>
+            </div>
+            <span id="rangeLabel">最近30天</span>
+          </div>
+          <canvas id="trendChart" height="260" aria-label="资产净值折线图"></canvas>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>资产分布</h2>
+              <p>按类别统计持仓</p>
+            </div>
+          </div>
+          <div class="allocation-list" id="allocationList"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>行业敞口</h2>
+              <p>当前组合占比</p>
+            </div>
+          </div>
+          <div class="bar-list" id="sectorList"></div>
+        </article>
+
+        <article class="panel table-panel">
+          <div class="panel-head">
+            <div>
+              <h2>近期交易</h2>
+              <p>样例交易流水</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>日期</th>
+                  <th>标的</th>
+                  <th>方向</th>
+                  <th>金额</th>
+                  <th>状态</th>
+                </tr>
+              </thead>
+              <tbody id="tradeRows"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
