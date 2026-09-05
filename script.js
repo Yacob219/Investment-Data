@@ -186,38 +186,22 @@ function updateKpis() {
 }
 
 function setupTrackNav() {
-  const drawer = document.getElementById("trackDrawer");
-  const overlay = document.getElementById("trackOverlay");
-  const list = document.getElementById("trackList");
-  const openButton = document.getElementById("openTrackNav");
-  const closeButton = document.getElementById("closeTrackNav");
+  const list = document.getElementById("sideTrackList");
   const counts = groupCount(rows, "companyCategory");
+  if (!list) return;
 
   list.innerHTML = mainTracks
     .map((track) => {
       const count = counts.get(track) || 0;
-      return `<a href="track.html?track=${encodeURIComponent(track)}"><span>${track}</span><b>${count}</b></a>`;
+      return `
+        <a href="track.html?track=${encodeURIComponent(track)}" title="${track}">
+          <span class="rail-icon">${track.slice(0, 1)}</span>
+          <span class="rail-label">${track}</span>
+          <b>${count}</b>
+        </a>
+      `;
     })
     .join("");
-
-  function openDrawer() {
-    overlay.hidden = false;
-    drawer.classList.add("is-open");
-    drawer.setAttribute("aria-hidden", "false");
-  }
-
-  function closeDrawer() {
-    overlay.hidden = true;
-    drawer.classList.remove("is-open");
-    drawer.setAttribute("aria-hidden", "true");
-  }
-
-  openButton.addEventListener("click", openDrawer);
-  closeButton.addEventListener("click", closeDrawer);
-  overlay.addEventListener("click", closeDrawer);
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeDrawer();
-  });
 }
 
 function setupCanvas(canvas) {
