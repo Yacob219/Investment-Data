@@ -1,6 +1,6 @@
 const blue = "#25b7ff";
-const gridColor = "rgba(179, 195, 219, 0.14)";
-const textColor = "#aeb8c7";
+const gridColor = "rgba(42, 55, 78, 0.09)";
+const textColor = "#8b909a";
 const rows = Array.isArray(window.dashboardData) ? window.dashboardData : [];
 
 const tooltip = document.createElement("div");
@@ -156,16 +156,6 @@ function updateKpis() {
   document.getElementById("top20Average").textContent = formatNumber(top20Average, 1);
   document.getElementById("activeRange").textContent = activeRange ? activeRange.label : "--";
   document.getElementById("activeRangeCount").textContent = activeRange ? `${activeRange.count} 家公司` : "-- 家公司";
-
-  const secondRange = Array.from(groupCount(rows, "cumulativeFundingRange"), ([label, count]) => ({ label, count }))
-    .sort((a, b) => b.count - a.count)[1];
-  const insight = activeRange && secondRange
-    ? `当前样本共 ${rows.length} 家公司，累计融资额最高活跃区间为 ${activeRange.label}，其次为 ${secondRange.label}；Top20 最新融资均值为 ${formatNumber(top20Average, 1)} 亿元。`
-    : "融资数据已接入，后续可继续加入筛选、公司详情和趋势对比。";
-  document.getElementById("insightText").innerHTML = insight.replace(
-    formatNumber(top20Average, 1),
-    `<b>${formatNumber(top20Average, 1)}</b>`,
-  );
 }
 
 function setupCanvas(canvas) {
