@@ -3,6 +3,17 @@ const gridColor = "rgba(42, 55, 78, 0.09)";
 const textColor = "#8b909a";
 const rows = Array.isArray(window.dashboardData) ? window.dashboardData : [];
 
+if ("scrollRestoration" in history) {
+  history.scrollRestoration = "manual";
+}
+
+if (!window.location.hash) {
+  requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0 }));
+  window.addEventListener("pageshow", () => {
+    setTimeout(() => window.scrollTo({ top: 0, left: 0 }), 0);
+  });
+}
+
 const tooltip = document.createElement("div");
 tooltip.className = "chart-tooltip";
 document.body.appendChild(tooltip);
@@ -211,9 +222,10 @@ function setupTrackNav() {
 function setupCanvas(canvas) {
   const rect = canvas.getBoundingClientRect();
   const dpr = window.devicePixelRatio || 1;
-  const height = Number(canvas.getAttribute("height"));
-  canvas.width = rect.width * dpr;
-  canvas.height = height * dpr;
+  const fallbackHeight = Number(canvas.getAttribute("height")) || 340;
+  const height = Math.round(rect.height || fallbackHeight);
+  canvas.width = Math.round(rect.width * dpr);
+  canvas.height = Math.round(height * dpr);
   const ctx = canvas.getContext("2d");
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   return { ctx, width: rect.width, height };
