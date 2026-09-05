@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>主赛道公司列表</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="dashboard track-page">
+      <header class="hero track-hero">
+        <div>
+          <p class="eyebrow">TRACK VIEW · EMBODIED AI</p>
+          <h1 id="trackTitle">主赛道公司列表</h1>
+          <p class="hero-copy" id="trackSubtitle">按最新估值排序，点击公司名称查看简短公司档案。</p>
+        </div>
+        <div class="hero-actions">
+          <a href="index.html">返回首页</a>
+        </div>
+      </header>
+
+      <section class="report-frame table-frame">
+        <div class="section-title">
+          <span>Company List</span>
+          <h2 id="tableTitle">公司列表</h2>
+        </div>
+        <div class="table-wrap">
+          <table class="company-table">
+            <thead>
+              <tr>
+                <th>公司名称</th>
+                <th>地区/城市</th>
+                <th>成立年份</th>
+                <th>主营方向</th>
+                <th>最新融资轮次</th>
+                <th>最新估值</th>
+                <th>累计融资额</th>
+                <th>最新轮金额</th>
+                <th>投资方</th>
+              </tr>
+            </thead>
+            <tbody id="companyRows"></tbody>
+          </table>
+        </div>
+        <p class="empty-state" id="emptyState" hidden>当前主赛道暂无公司数据。</p>
+      </section>
+    </main>
+
+    <div class="overlay" id="detailOverlay" hidden></div>
+    <aside class="detail-drawer" id="detailDrawer" aria-label="公司详情" aria-hidden="true">
+      <div class="drawer-head">
+        <div>
+          <span>Company Profile</span>
+          <h2 id="detailName">公司详情</h2>
+        </div>
+        <button class="icon-button" id="closeDetail" type="button" aria-label="关闭公司详情">×</button>
+      </div>
+      <div class="detail-content" id="detailContent"></div>
+    </aside>
+
+    <script src="data.js"></script>
+    <script src="track.js"></script>
+  </body>
+</html>
