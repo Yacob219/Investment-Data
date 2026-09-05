@@ -71,10 +71,20 @@ body::before {
 .rail-brand span {
   width: 18px;
   height: 18px;
-  border-radius: 6px;
-  background:
-    linear-gradient(90deg, #101113 2px, transparent 2px) 5px 4px / 7px 10px no-repeat,
-    linear-gradient(#101113 2px, transparent 2px) 4px 5px / 10px 7px no-repeat;
+  border: 3px solid #101113;
+  border-right-color: var(--blue);
+  border-radius: 999px;
+  transform: rotate(-20deg);
+}
+
+.rail-brand span::after {
+  content: "";
+  display: block;
+  width: 7px;
+  height: 3px;
+  margin: 5px auto 0;
+  border-radius: 999px;
+  background: #101113;
 }
 
 .rail-track-list {
@@ -374,7 +384,15 @@ button {
 canvas {
   display: block;
   width: 100%;
+  height: clamp(260px, 24vw, 360px);
   max-width: 100%;
+}
+
+#latestRoundChart,
+#valuationTopChart,
+#fundingTopChart,
+#fullStackChart {
+  height: clamp(320px, 28vw, 430px);
 }
 
 .chart-tooltip {
@@ -668,6 +686,17 @@ canvas {
 
   .panel {
     padding: 20px 16px 16px;
+  }
+
+  canvas {
+    height: 260px;
+  }
+
+  #latestRoundChart,
+  #valuationTopChart,
+  #fundingTopChart,
+  #fullStackChart {
+    height: 320px;
   }
 
   .detail-drawer {
