@@ -34,6 +34,10 @@ function sumBy(items, field) {
   return items.reduce((total, item) => total + (Number(item[field]) || 0), 0);
 }
 
+function getTrack(item) {
+  return item.mainTrack || item.companyCategory || item["主赛道"] || item["公司分类"] || "未知";
+}
+
 function averageBy(items, field) {
   const values = items.map((item) => Number(item[field])).filter((value) => Number.isFinite(value) && value > 0);
   return values.length ? values.reduce((total, value) => total + value, 0) / values.length : 0;
@@ -41,7 +45,7 @@ function averageBy(items, field) {
 
 function groupCount(items, field) {
   return items.reduce((groups, item) => {
-    const key = item[field] || "未知";
+    const key = typeof field === "function" ? field(item) : item[field] || "未知";
     groups.set(key, (groups.get(key) || 0) + 1);
     return groups;
   }, new Map());
@@ -52,7 +56,7 @@ function groupAverage(items, groupField, valueField) {
   items.forEach((item) => {
     const value = Number(item[valueField]);
     if (!Number.isFinite(value) || value <= 0) return;
-    const key = item[groupField] || "未知";
+    const key = typeof groupField === "function" ? groupField(item) : item[groupField] || "未知";
     const current = groups.get(key) || { total: 0, count: 0 };
     current.total += value;
     current.count += 1;
@@ -89,7 +93,7 @@ function makeCountSeries(field) {
 function makeTopSeries(field, categoryFilter, limit = 20) {
   return toChartSeries(
     rows
-      .filter((item) => !categoryFilter || item.companyCategory === categoryFilter)
+      .filter((item) => !categoryFilter || getTrack(item) === categoryFilter)
       .map((item) => ({
         label: item.companyName,
         value: Number(item[field]) || 0,
@@ -110,8 +114,8 @@ function niceMax(values) {
 function buildCharts() {
   const valuationCount = makeCountSeries("valuationRange");
   const fundingRange = makeCountSeries("cumulativeFundingRange");
-  const categoryFunding = toChartSeries(groupAverage(rows, "companyCategory", "cumulativeFunding"));
-  const categoryValuation = toChartSeries(groupAverage(rows, "companyCategory", "latestValuation"));
+  const categoryFunding = toChartSeries(groupAverage(rows, getTrack, "cumulativeFunding"));
+  const categoryValuation = toChartSeries(groupAverage(rows, getTrack, "latestValuation"));
   const latestRound = makeTopSeries("latestRoundAmount");
   const valuationTop = makeTopSeries("latestValuation");
   const fundingTop = makeTopSeries("cumulativeFunding");
@@ -187,15 +191,15 @@ function updateKpis() {
 
 function setupTrackNav() {
   const list = document.getElementById("sideTrackList");
-  const counts = groupCount(rows, "companyCategory");
+  const counts = groupCount(rows, getTrack);
   if (!list) return;
 
   list.innerHTML = mainTracks
     .map((track) => {
       const count = counts.get(track) || 0;
       return `
-        <a href="track.html?track=${encodeURIComponent(track)}" title="${track}">
-          <span class="rail-icon">${track.slice(0, 1)}</span>
+        <a href="track.html?track=${encodeURIComponent(track)}" title="${track}" aria-label="${track}">
+          <span class="rail-icon" aria-hidden="true"></span>
           <span class="rail-label">${track}</span>
           <b>${count}</b>
         </a>
