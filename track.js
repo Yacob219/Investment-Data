@@ -29,9 +29,13 @@ function display(value) {
   return value === null || value === undefined || value === "" ? "--" : value;
 }
 
+function getTrack(item) {
+  return item.mainTrack || item.companyCategory || item["主赛道"] || item["公司分类"] || "未知";
+}
+
 function groupCount(items, field) {
   return items.reduce((groups, item) => {
-    const key = item[field] || "未知";
+    const key = typeof field === "function" ? field(item) : item[field] || "未知";
     groups.set(key, (groups.get(key) || 0) + 1);
     return groups;
   }, new Map());
@@ -39,7 +43,7 @@ function groupCount(items, field) {
 
 function setupTrackNav() {
   const list = document.getElementById("sideTrackList");
-  const counts = groupCount(rows, "companyCategory");
+  const counts = groupCount(rows, getTrack);
   if (!list) return;
 
   list.innerHTML = mainTracks
@@ -47,8 +51,8 @@ function setupTrackNav() {
       const count = counts.get(track) || 0;
       const activeClass = track === selectedTrack ? " is-active" : "";
       return `
-        <a class="${activeClass}" href="track.html?track=${encodeURIComponent(track)}" title="${track}">
-          <span class="rail-icon">${track.slice(0, 1)}</span>
+        <a class="${activeClass}" href="track.html?track=${encodeURIComponent(track)}" title="${track}" aria-label="${track}">
+          <span class="rail-icon" aria-hidden="true"></span>
           <span class="rail-label">${track}</span>
           <b>${count}</b>
         </a>
@@ -119,7 +123,7 @@ function closeDetail() {
 
 function render() {
   const trackRows = rows
-    .filter((row) => row.companyCategory === selectedTrack)
+    .filter((row) => getTrack(row) === selectedTrack)
     .sort((a, b) => (Number(b.latestValuation) || 0) - (Number(a.latestValuation) || 0));
 
   document.getElementById("trackTitle").textContent = selectedTrack;
