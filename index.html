@@ -7,16 +7,17 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <aside class="side-rail" aria-label="主赛道导航">
+      <a class="rail-brand" href="index.html" aria-label="返回首页">ID</a>
+      <nav class="rail-track-list" id="sideTrackList"></nav>
+    </aside>
+
     <main class="dashboard">
       <header class="hero">
         <div>
           <p class="eyebrow">MANAGEMENT REPORTING · EMBODIED AI · 2026H1</p>
           <h1>具身智能融资数据看板</h1>
           <p class="hero-copy">基于融资明细表自动汇总，跟踪估值区间、融资区间、分类均值与 Top20 公司表现。</p>
-        </div>
-        <div class="hero-actions" aria-label="看板操作">
-          <button class="track-trigger" id="openTrackNav" type="button">选择主赛道</button>
-          <a href="editor.html">数据编辑</a>
         </div>
       </header>
 
@@ -144,18 +145,6 @@
         </section>
       </section>
     </main>
-
-    <div class="overlay" id="trackOverlay" hidden></div>
-    <aside class="track-drawer" id="trackDrawer" aria-label="主赛道选择" aria-hidden="true">
-      <div class="drawer-head">
-        <div>
-          <span>Tracks</span>
-          <h2>选择主赛道</h2>
-        </div>
-        <button class="icon-button" id="closeTrackNav" type="button" aria-label="关闭主赛道面板">×</button>
-      </div>
-      <nav class="track-list" id="trackList"></nav>
-    </aside>
 
     <script src="data.js"></script>
     <script src="script.js"></script>
