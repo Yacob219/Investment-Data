@@ -2,6 +2,21 @@ const DETAIL_EMPTY_TEXT = "小编正在全速补充中";
 const rows = Array.isArray(window.dashboardData) ? window.dashboardData : [];
 const params = new URLSearchParams(window.location.search);
 const selectedTrack = params.get("track") || "全栈";
+const mainTracks = [
+  "全栈",
+  "本体",
+  "场景机器人",
+  "具身大脑",
+  "世界模型",
+  "数据采集",
+  "物理仿真",
+  "机械臂",
+  "灵巧手",
+  "关节模组",
+  "触觉传感器",
+  "视觉感知",
+  "仿生脸",
+];
 
 function formatValue(value, suffix = "") {
   const number = Number(value);
@@ -12,6 +27,34 @@ function formatValue(value, suffix = "") {
 
 function display(value) {
   return value === null || value === undefined || value === "" ? "--" : value;
+}
+
+function groupCount(items, field) {
+  return items.reduce((groups, item) => {
+    const key = item[field] || "未知";
+    groups.set(key, (groups.get(key) || 0) + 1);
+    return groups;
+  }, new Map());
+}
+
+function setupTrackNav() {
+  const list = document.getElementById("sideTrackList");
+  const counts = groupCount(rows, "companyCategory");
+  if (!list) return;
+
+  list.innerHTML = mainTracks
+    .map((track) => {
+      const count = counts.get(track) || 0;
+      const activeClass = track === selectedTrack ? " is-active" : "";
+      return `
+        <a class="${activeClass}" href="track.html?track=${encodeURIComponent(track)}" title="${track}">
+          <span class="rail-icon">${track.slice(0, 1)}</span>
+          <span class="rail-label">${track}</span>
+          <b>${count}</b>
+        </a>
+      `;
+    })
+    .join("");
 }
 
 function getRegion(row) {
@@ -112,4 +155,5 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") closeDetail();
 });
 
+setupTrackNav();
 render();
