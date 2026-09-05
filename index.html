@@ -10,122 +10,103 @@
     <main class="dashboard">
       <header class="hero">
         <div>
-          <p class="eyebrow">Investment Intelligence</p>
-          <h1>融资数据监测看板</h1>
+          <p class="eyebrow">MANAGEMENT REPORTING · EMBODIED AI · 2026H1</p>
+          <h1>具身智能融资数据看板</h1>
+          <p class="hero-copy">基于融资明细表自动汇总，跟踪估值区间、融资区间、分类均值与 Top20 公司表现。</p>
         </div>
-        <div class="actions">
-          <button class="ghost-button" type="button">智能分析</button>
-          <button class="primary-button" type="button">订阅提醒</button>
+        <div class="meta-pills" aria-label="看板范围">
+          <span>融资明细</span>
+          <span>估值分析</span>
+          <span>Top20</span>
         </div>
       </header>
 
-      <section class="kpi-grid" aria-label="关键指标">
-        <article class="kpi-card">
-          <span>总计累计融资总额（亿元）</span>
-          <strong id="totalFunding">--</strong>
-          <small id="totalFundingSub">来自 Excel 数据表</small>
-        </article>
-        <article class="kpi-card">
-          <span>统计具身智能公司总数</span>
-          <strong id="companyCount">--</strong>
-          <small id="categoryCount">分类统计中</small>
-        </article>
-        <article class="kpi-card">
-          <span>最新融资额 Top20 均值</span>
-          <strong id="top20Average">--</strong>
-          <small>亿元 RMB</small>
-        </article>
-        <article class="kpi-card">
-          <span>高活跃融资区间</span>
-          <strong id="activeRange">--</strong>
-          <small id="activeRangeCount">-- 家公司</small>
-        </article>
+      <section class="report-frame">
+        <section class="kpi-grid" aria-label="关键指标">
+          <article class="kpi-card">
+            <span>总计累计融资总额（亿元）</span>
+            <strong id="totalFunding">--</strong>
+            <small id="totalFundingSub">来自 Excel 数据表</small>
+          </article>
+          <article class="kpi-card accent-blue">
+            <span>统计具身智能公司总数</span>
+            <strong id="companyCount">--</strong>
+            <small id="categoryCount">分类统计中</small>
+          </article>
+          <article class="kpi-card accent-green">
+            <span>最新融资额 Top20 均值</span>
+            <strong id="top20Average">--</strong>
+            <small>亿元 RMB</small>
+          </article>
+          <article class="kpi-card accent-yellow">
+            <span>高活跃融资区间</span>
+            <strong id="activeRange">--</strong>
+            <small id="activeRangeCount">-- 家公司</small>
+          </article>
+        </section>
+
+        <section class="board">
+          <article class="panel panel-wide">
+            <div class="panel-head">
+              <div>
+                <h2>估值区间公司数量</h2>
+                <p><span class="legend-dot"></span>计数</p>
+              </div>
+            </div>
+            <canvas id="valuationCountChart" height="360"></canvas>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>累计融资额区间公司数量</h2>
+                <p><span class="legend-dot"></span>计数</p>
+              </div>
+            </div>
+            <canvas id="fundingRangeChart" height="360"></canvas>
+          </article>
+
+          <article class="panel panel-wide">
+            <div class="panel-head">
+              <div>
+                <h2>各公司分类平均累计融资额</h2>
+                <p><span class="legend-dot"></span>累计融资额_亿元RMB</p>
+              </div>
+            </div>
+            <canvas id="categoryFundingChart" height="340"></canvas>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>最新融资额 Top20</h2>
+                <p><span class="legend-dot"></span>最新轮金额_亿元RMB</p>
+              </div>
+            </div>
+            <canvas id="latestRoundChart" height="390"></canvas>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>各公司分类平均估值</h2>
+                <p><span class="legend-dot"></span>最新估值_亿元RMB</p>
+              </div>
+            </div>
+            <canvas id="categoryValuationChart" height="330"></canvas>
+          </article>
+
+          <article class="panel panel-wide">
+            <div class="panel-head">
+              <div>
+                <h2>全栈厂估值</h2>
+                <p><span class="legend-dot"></span>最新估值_亿元RMB</p>
+              </div>
+            </div>
+            <canvas id="fullStackChart" height="330"></canvas>
+          </article>
+        </section>
       </section>
-
-      <section class="board">
-        <article class="panel panel-wide">
-          <div class="panel-head">
-            <div>
-              <h2>估值区间公司数量</h2>
-              <p><span class="legend-dot"></span>计数</p>
-            </div>
-          </div>
-          <canvas id="valuationCountChart" height="360"></canvas>
-        </article>
-
-        <article class="panel">
-          <div class="panel-head">
-            <div>
-              <h2>累计融资额区间公司数量</h2>
-              <p><span class="legend-dot"></span>计数</p>
-            </div>
-            <button class="mini-ai" type="button">智能分析</button>
-          </div>
-          <canvas id="fundingRangeChart" height="360"></canvas>
-        </article>
-
-        <article class="panel panel-wide">
-          <div class="panel-head">
-            <div>
-              <h2>各公司分类平均累计融资额</h2>
-              <p><span class="legend-dot"></span>累计融资额_亿元RMB</p>
-            </div>
-          </div>
-          <canvas id="categoryFundingChart" height="340"></canvas>
-        </article>
-
-        <article class="panel">
-          <div class="panel-head">
-            <div>
-              <h2>最新融资额 Top20</h2>
-              <p><span class="legend-dot"></span>最新轮金额_亿元RMB</p>
-            </div>
-          </div>
-          <canvas id="latestRoundChart" height="390"></canvas>
-        </article>
-
-        <article class="panel">
-          <div class="panel-head">
-            <div>
-              <h2>各公司分类平均估值</h2>
-              <p><span class="legend-dot"></span>最新估值_亿元RMB</p>
-            </div>
-          </div>
-          <canvas id="categoryValuationChart" height="330"></canvas>
-        </article>
-
-        <article class="panel panel-wide">
-          <div class="panel-head">
-            <div>
-              <h2>全栈厂估值</h2>
-              <p><span class="legend-dot"></span>最新估值_亿元RMB</p>
-            </div>
-          </div>
-          <canvas id="fullStackChart" height="330"></canvas>
-        </article>
-      </section>
-
-      <aside class="insight-card" aria-label="数据提醒">
-        <h2>订阅你的专属数据提醒</h2>
-        <p>灵活设置关注内容和分析需求，定期掌握融资与估值变化</p>
-        <div class="assistant-card">
-          <span class="spark">✦</span>
-          <strong>数据分析助手</strong>
-          <p id="insightText">正在读取融资数据，生成分析摘要。</p>
-          <div class="mini-chart">
-            <span style="height:38%"></span>
-            <span style="height:64%"></span>
-            <span style="height:78%"></span>
-            <span style="height:52%"></span>
-            <span style="height:76%"></span>
-            <span style="height:62%"></span>
-          </div>
-        </div>
-        <div class="insight-actions">
-          <button class="light-button" type="button">稍后再说</button>
-          <button class="primary-button" type="button">立即订阅</button>
-        </div>
-      </aside>
     </main>
 
     <script src="data.js"></script>
