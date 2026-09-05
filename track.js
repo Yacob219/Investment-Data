@@ -2,6 +2,18 @@ const DETAIL_EMPTY_TEXT = "小编正在全速补充中";
 const rows = Array.isArray(window.dashboardData) ? window.dashboardData : [];
 const params = new URLSearchParams(window.location.search);
 const selectedTrack = params.get("track") || "全栈";
+
+if ("scrollRestoration" in history) {
+  history.scrollRestoration = "manual";
+}
+
+if (!window.location.hash) {
+  requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0 }));
+  window.addEventListener("pageshow", () => {
+    setTimeout(() => window.scrollTo({ top: 0, left: 0 }), 0);
+  });
+}
+
 const mainTracks = [
   "全栈",
   "本体",
