@@ -14,39 +14,50 @@
           <h1>具身智能融资数据看板</h1>
           <p class="hero-copy">基于融资明细表自动汇总，跟踪估值区间、融资区间、分类均值与 Top20 公司表现。</p>
         </div>
-        <div class="meta-pills" aria-label="看板范围">
-          <span>融资明细</span>
-          <span>估值分析</span>
-          <span>Top20</span>
+        <div class="hero-actions" aria-label="看板操作">
+          <button class="track-trigger" id="openTrackNav" type="button">选择主赛道</button>
           <a href="editor.html">数据编辑</a>
         </div>
       </header>
 
       <section class="report-frame">
+        <div class="section-title">
+          <span>Overview</span>
+          <h2>融资总览</h2>
+        </div>
         <section class="kpi-grid" aria-label="关键指标">
-          <article class="kpi-card">
-            <span>总计累计融资总额（亿元）</span>
+          <article class="kpi-card kpi-primary">
+            <span>累计融资总额</span>
             <strong id="totalFunding">--</strong>
             <small id="totalFundingSub">来自 Excel 数据表</small>
           </article>
-          <article class="kpi-card accent-blue">
-            <span>统计具身智能公司总数</span>
+          <article class="kpi-card">
+            <span>公司总数</span>
             <strong id="companyCount">--</strong>
-            <small id="categoryCount">分类统计中</small>
+            <small>纳入当前样本</small>
           </article>
-          <article class="kpi-card accent-green">
-            <span>最新融资额 Top20 均值</span>
-            <strong id="top20Average">--</strong>
+          <article class="kpi-card">
+            <span>平均估值</span>
+            <strong id="averageValuation">--</strong>
             <small>亿元 RMB</small>
           </article>
-          <article class="kpi-card accent-yellow">
-            <span>高活跃融资区间</span>
-            <strong id="activeRange">--</strong>
-            <small id="activeRangeCount">-- 家公司</small>
+          <article class="kpi-card">
+            <span>平均融资额</span>
+            <strong id="averageFunding">--</strong>
+            <small>亿元 RMB</small>
+          </article>
+          <article class="kpi-card">
+            <span>赛道数量</span>
+            <strong id="trackCount">--</strong>
+            <small>主赛道体系</small>
           </article>
         </section>
 
         <section class="board">
+          <div class="section-title full-row">
+            <span>Distribution</span>
+            <h2>总览分布</h2>
+          </div>
           <article class="panel panel-wide">
             <div class="panel-head">
               <div>
@@ -97,6 +108,30 @@
             <canvas id="categoryValuationChart" height="330"></canvas>
           </article>
 
+          <div class="section-title full-row">
+            <span>Ranking</span>
+            <h2>Top20 榜单</h2>
+          </div>
+          <article class="panel panel-wide">
+            <div class="panel-head">
+              <div>
+                <h2>最新估值 Top20</h2>
+                <p><span class="legend-dot"></span>最新估值_亿元RMB</p>
+              </div>
+            </div>
+            <canvas id="valuationTopChart" height="390"></canvas>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>累计融资额 Top20</h2>
+                <p><span class="legend-dot"></span>累计融资额_亿元RMB</p>
+              </div>
+            </div>
+            <canvas id="fundingTopChart" height="390"></canvas>
+          </article>
+
           <article class="panel panel-wide">
             <div class="panel-head">
               <div>
@@ -109,6 +144,18 @@
         </section>
       </section>
     </main>
+
+    <div class="overlay" id="trackOverlay" hidden></div>
+    <aside class="track-drawer" id="trackDrawer" aria-label="主赛道选择" aria-hidden="true">
+      <div class="drawer-head">
+        <div>
+          <span>Tracks</span>
+          <h2>选择主赛道</h2>
+        </div>
+        <button class="icon-button" id="closeTrackNav" type="button" aria-label="关闭主赛道面板">×</button>
+      </div>
+      <nav class="track-list" id="trackList"></nav>
+    </aside>
 
     <script src="data.js"></script>
     <script src="script.js"></script>
