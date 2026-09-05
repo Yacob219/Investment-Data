@@ -8,6 +8,21 @@ tooltip.className = "chart-tooltip";
 document.body.appendChild(tooltip);
 
 const hitAreas = new Map();
+const mainTracks = [
+  "全栈",
+  "本体",
+  "场景机器人",
+  "具身大脑",
+  "世界模型",
+  "数据采集",
+  "物理仿真",
+  "机械臂",
+  "灵巧手",
+  "关节模组",
+  "触觉传感器",
+  "视觉感知",
+  "仿生脸",
+];
 
 function formatNumber(value, digits = 1) {
   if (!Number.isFinite(value)) return "--";
@@ -17,6 +32,11 @@ function formatNumber(value, digits = 1) {
 
 function sumBy(items, field) {
   return items.reduce((total, item) => total + (Number(item[field]) || 0), 0);
+}
+
+function averageBy(items, field) {
+  const values = items.map((item) => Number(item[field])).filter((value) => Number.isFinite(value) && value > 0);
+  return values.length ? values.reduce((total, value) => total + value, 0) / values.length : 0;
 }
 
 function groupCount(items, field) {
@@ -93,6 +113,8 @@ function buildCharts() {
   const categoryFunding = toChartSeries(groupAverage(rows, "companyCategory", "cumulativeFunding"));
   const categoryValuation = toChartSeries(groupAverage(rows, "companyCategory", "latestValuation"));
   const latestRound = makeTopSeries("latestRoundAmount");
+  const valuationTop = makeTopSeries("latestValuation");
+  const fundingTop = makeTopSeries("cumulativeFunding");
   const fullStack = makeTopSeries("latestValuation", "全栈");
 
   return [
@@ -127,6 +149,18 @@ function buildCharts() {
       ...categoryValuation,
     },
     {
+      id: "valuationTopChart",
+      type: "horizontal",
+      max: niceMax(valuationTop.values),
+      ...valuationTop,
+    },
+    {
+      id: "fundingTopChart",
+      type: "horizontal",
+      max: niceMax(fundingTop.values),
+      ...fundingTop,
+    },
+    {
       id: "fullStackChart",
       type: "horizontal",
       max: niceMax(fullStack.values),
@@ -139,23 +173,51 @@ const charts = buildCharts();
 
 function updateKpis() {
   const totalFunding = sumBy(rows, "cumulativeFunding");
-  const categories = new Set(rows.map((item) => item.companyCategory).filter(Boolean));
-  const top20 = rows
-    .map((item) => Number(item.latestRoundAmount) || 0)
-    .filter((value) => value > 0)
-    .sort((a, b) => b - a)
-    .slice(0, 20);
-  const top20Average = top20.length ? top20.reduce((total, value) => total + value, 0) / top20.length : 0;
-  const activeRange = Array.from(groupCount(rows, "cumulativeFundingRange"), ([label, count]) => ({ label, count }))
-    .sort((a, b) => b.count - a.count)[0];
+  const averageFunding = averageBy(rows, "cumulativeFunding");
+  const averageValuation = averageBy(rows, "latestValuation");
 
   document.getElementById("totalFunding").textContent = formatNumber(totalFunding, 0);
   document.getElementById("totalFundingSub").textContent = "亿元 RMB 累计融资";
   document.getElementById("companyCount").textContent = rows.length.toLocaleString("zh-CN");
-  document.getElementById("categoryCount").textContent = `覆盖 ${categories.size} 个细分类别`;
-  document.getElementById("top20Average").textContent = formatNumber(top20Average, 1);
-  document.getElementById("activeRange").textContent = activeRange ? activeRange.label : "--";
-  document.getElementById("activeRangeCount").textContent = activeRange ? `${activeRange.count} 家公司` : "-- 家公司";
+  document.getElementById("averageValuation").textContent = formatNumber(averageValuation, 1);
+  document.getElementById("averageFunding").textContent = formatNumber(averageFunding, 1);
+  document.getElementById("trackCount").textContent = mainTracks.length.toLocaleString("zh-CN");
+
+}
+
+function setupTrackNav() {
+  const drawer = document.getElementById("trackDrawer");
+  const overlay = document.getElementById("trackOverlay");
+  const list = document.getElementById("trackList");
+  const openButton = document.getElementById("openTrackNav");
+  const closeButton = document.getElementById("closeTrackNav");
+  const counts = groupCount(rows, "companyCategory");
+
+  list.innerHTML = mainTracks
+    .map((track) => {
+      const count = counts.get(track) || 0;
+      return `<a href="track.html?track=${encodeURIComponent(track)}"><span>${track}</span><b>${count}</b></a>`;
+    })
+    .join("");
+
+  function openDrawer() {
+    overlay.hidden = false;
+    drawer.classList.add("is-open");
+    drawer.setAttribute("aria-hidden", "false");
+  }
+
+  function closeDrawer() {
+    overlay.hidden = true;
+    drawer.classList.remove("is-open");
+    drawer.setAttribute("aria-hidden", "true");
+  }
+
+  openButton.addEventListener("click", openDrawer);
+  closeButton.addEventListener("click", closeDrawer);
+  overlay.addEventListener("click", closeDrawer);
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeDrawer();
+  });
 }
 
 function setupCanvas(canvas) {
@@ -355,6 +417,7 @@ function attachTooltips() {
 }
 
 updateKpis();
+setupTrackNav();
 drawAll();
 attachTooltips();
 window.addEventListener("resize", drawAll);
