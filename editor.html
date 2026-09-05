@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>融资数据编辑器</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="editor.css" />
+  </head>
+  <body>
+    <main class="dashboard editor-shell">
+      <header class="editor-hero">
+        <div>
+          <p class="eyebrow">DATA WORKBENCH · EMBODIED AI</p>
+          <h1>融资数据编辑器</h1>
+          <p class="hero-copy">在这里直接维护公司融资数据，导出后可更新主看板使用的 `data.js`。</p>
+        </div>
+        <div class="editor-actions">
+          <a class="secondary-link" href="index.html">返回看板</a>
+          <button class="soft-button" id="addRow" type="button">新增公司</button>
+          <button class="primary-button" id="exportJs" type="button">导出 data.js</button>
+          <button class="soft-button" id="exportCsv" type="button">导出 CSV</button>
+        </div>
+      </header>
+
+      <section class="editor-toolbar" aria-label="编辑工具">
+        <label>
+          搜索
+          <input id="searchInput" type="search" placeholder="公司名、分类、区间" />
+        </label>
+        <label>
+          分类
+          <select id="categoryFilter">
+            <option value="">全部分类</option>
+          </select>
+        </label>
+        <button class="quiet-button" id="saveDraft" type="button">保存草稿</button>
+        <button class="quiet-button" id="resetDraft" type="button">恢复原始数据</button>
+        <span id="statusText">已载入数据</span>
+      </section>
+
+      <section class="editor-panel">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>公司名称</th>
+                <th>公司分类</th>
+                <th>最新轮金额</th>
+                <th>累计融资额</th>
+                <th>最新估值</th>
+                <th>估值区间</th>
+                <th>累计融资区间</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="editorRows"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="editor.js"></script>
+  </body>
+</html>
