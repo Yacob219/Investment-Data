@@ -1,7 +1,12 @@
 const blue = "#25b7ff";
 const gridColor = "rgba(42, 55, 78, 0.09)";
 const textColor = "#8b909a";
-const rows = Array.isArray(window.dashboardData) ? window.dashboardData : [];
+const rows = Array.isArray(window.dashboardHomeData)
+  ? window.dashboardHomeData
+  : Array.isArray(window.dashboardData)
+    ? window.dashboardData
+    : [];
+const navRows = Array.isArray(window.dashboardTrackData) ? window.dashboardTrackData : rows;
 
 if ("scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -19,21 +24,9 @@ tooltip.className = "chart-tooltip";
 document.body.appendChild(tooltip);
 
 const hitAreas = new Map();
-const mainTracks = [
-  "全栈",
-  "本体",
-  "场景机器人",
-  "具身大脑",
-  "世界模型",
-  "数据采集",
-  "物理仿真",
-  "机械臂",
-  "灵巧手",
-  "关节模组",
-  "触觉传感器",
-  "视觉感知",
-  "仿生脸",
-];
+const mainTracks = Array.isArray(window.dashboardTracks)
+  ? window.dashboardTracks
+  : ["全栈", "本体", "场景机器人", "具身大脑", "世界模型", "数据采集", "物理仿真", "机械臂", "灵巧手", "关节模组", "触觉传感器", "视觉感知", "仿生脸"];
 
 function formatNumber(value, digits = 1) {
   if (!Number.isFinite(value)) return "--";
@@ -202,7 +195,7 @@ function updateKpis() {
 
 function setupTrackNav() {
   const list = document.getElementById("sideTrackList");
-  const counts = groupCount(rows, getTrack);
+  const counts = groupCount(navRows, getTrack);
   if (!list) return;
 
   list.innerHTML = mainTracks
