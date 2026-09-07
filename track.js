@@ -1,5 +1,9 @@
 const DETAIL_EMPTY_TEXT = "小编正在全速补充中";
-const rows = Array.isArray(window.dashboardData) ? window.dashboardData : [];
+const rows = Array.isArray(window.dashboardTrackData)
+  ? window.dashboardTrackData
+  : Array.isArray(window.dashboardData)
+    ? window.dashboardData
+    : [];
 const params = new URLSearchParams(window.location.search);
 const selectedTrack = params.get("track") || "全栈";
 
@@ -14,21 +18,9 @@ if (!window.location.hash) {
   });
 }
 
-const mainTracks = [
-  "全栈",
-  "本体",
-  "场景机器人",
-  "具身大脑",
-  "世界模型",
-  "数据采集",
-  "物理仿真",
-  "机械臂",
-  "灵巧手",
-  "关节模组",
-  "触觉传感器",
-  "视觉感知",
-  "仿生脸",
-];
+const mainTracks = Array.isArray(window.dashboardTracks)
+  ? window.dashboardTracks
+  : ["全栈", "本体", "场景机器人", "具身大脑", "世界模型", "数据采集", "物理仿真", "机械臂", "灵巧手", "关节模组", "触觉传感器", "视觉感知", "仿生脸"];
 
 function formatValue(value, suffix = "") {
   const number = Number(value);
