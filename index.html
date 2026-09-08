@@ -8,7 +8,10 @@
   </head>
   <body>
     <aside class="side-rail" aria-label="主赛道导航">
-      <a class="rail-brand" href="index.html" aria-label="返回首页"><span aria-hidden="true"></span></a>
+      <a class="rail-home is-active" href="index.html" aria-label="总览">
+        <span class="rail-brand" aria-hidden="true"><span></span></span>
+        <span class="rail-label">总览</span>
+      </a>
       <nav class="rail-track-list" id="sideTrackList"></nav>
     </aside>
 
@@ -17,7 +20,7 @@
         <div>
           <p class="eyebrow">MANAGEMENT REPORTING · EMBODIED AI · 2026H1</p>
           <h1>具身智能融资数据看板</h1>
-          <p class="hero-copy">基于融资明细表自动汇总，跟踪估值区间、融资区间、分类均值与 Top20 公司表现。</p>
+          <p class="hero-copy">由于许多公司未披露具体估值和融资额，本看板优先整理头部公司与已披露样本，用于提供具身智能融资市场的整体画像。</p>
         </div>
       </header>
 
@@ -100,6 +103,18 @@
           </article>
         </section>
 
+        <section class="ipo-section" aria-label="IPO 进度图">
+          <div class="section-title">
+            <span>IPO Progress</span>
+            <h2 id="ipoTitle">国内具身智能企业 IPO 进度图</h2>
+          </div>
+          <div class="ipo-meta">
+            <div class="ipo-legend" id="ipoLegend"></div>
+            <p id="ipoMethod">分类口径：四足 = 四足机器人及关联硬件；人形 = 人形/双足整机及关键本体硬件；通用全栈 = 大脑、运控、本体、数据闭环等多环节布局；产业链上下游 = 核心部件、仿真数据、工业/服务机器人及相关基础设施。横向位置表示 IPO 推进阶段，点位仅用于展示相对进度。</p>
+          </div>
+          <div class="ipo-chart" id="ipoChart"></div>
+        </section>
+
         <section class="board">
           <div class="section-title full-row">
             <span>Ranking</span>
@@ -148,7 +163,10 @@
       </section>
     </main>
 
+    <div class="ipo-popover" id="ipoPopover" hidden></div>
+
     <script src="data.js"></script>
+    <script src="data-ipo.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
