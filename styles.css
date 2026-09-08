@@ -498,21 +498,61 @@ canvas {
 
 .company-table {
   width: 100%;
-  min-width: 1800px;
+  min-width: 1720px;
   border-collapse: collapse;
   table-layout: fixed;
   font-size: 15px;
 }
 
+.company-table .col-company {
+  width: 210px;
+}
+
+.company-table .col-region {
+  width: 190px;
+}
+
+.company-table .col-year {
+  width: 140px;
+}
+
+.company-table .col-direction {
+  width: 480px;
+}
+
+.company-table .col-round {
+  width: 210px;
+}
+
+.company-table .col-value {
+  width: 170px;
+}
+
+.company-table .col-funding {
+  width: 180px;
+}
+
 .company-table th,
 .company-table td {
-  width: 200px;
   padding: 16px 18px;
   border-bottom: 1px solid #edf1f6;
   text-align: left;
-  vertical-align: top;
+  vertical-align: middle;
   overflow-wrap: anywhere;
   word-break: break-word;
+}
+
+.company-table td {
+  height: 96px;
+}
+
+.cell-text {
+  display: -webkit-box;
+  max-height: 64px;
+  overflow: hidden;
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
 .company-table th {
@@ -532,6 +572,7 @@ canvas {
   background: transparent;
   color: var(--blue-strong);
   font-weight: 850;
+  text-align: left;
   cursor: pointer;
 }
 
