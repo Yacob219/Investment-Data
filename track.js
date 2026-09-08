@@ -21,20 +21,37 @@ if (!window.location.hash) {
 const mainTracks = Array.isArray(window.dashboardTracks)
   ? window.dashboardTracks
   : ["全栈", "本体", "场景机器人", "具身大脑", "世界模型", "数据采集", "物理仿真", "机械臂", "灵巧手", "关节模组", "触觉传感器", "视觉感知", "仿生脸"];
+const trackExtras = Array.isArray(window.dashboardTrackExtras) ? window.dashboardTrackExtras : [];
+const extraByKey = new Map(trackExtras.map(([companyName, mainTrack, mainDirection, investors]) => [
+  `${companyName}::${mainTrack}`,
+  { mainDirection, investors },
+]));
+
+function getTrack(item) {
+  return item.mainTrack || item.companyCategory || item["主赛道"] || item["公司分类"] || "未知";
+}
+
+rows.forEach((row) => {
+  const extra = extraByKey.get(`${row.companyName}::${getTrack(row)}`);
+  if (!extra) return;
+  row.mainDirection = row.mainDirection || extra.mainDirection;
+  row.investors = row.investors || extra.investors;
+});
 
 function formatValue(value, suffix = "") {
   const number = Number(value);
-  if (!Number.isFinite(number) || number <= 0) return "--";
+  if (!Number.isFinite(number) || number <= 0) return "未披露";
   const rounded = Number(number.toFixed(1));
   return `${rounded.toLocaleString("zh-CN")}${suffix}`;
 }
 
 function display(value) {
-  return value === null || value === undefined || value === "" ? "--" : value;
+  return value === null || value === undefined || value === "" ? "未披露" : value;
 }
 
-function getTrack(item) {
-  return item.mainTrack || item.companyCategory || item["主赛道"] || item["公司分类"] || "未知";
+function displayAmountRange(label, value) {
+  if (!value || value === "未知") return "未披露";
+  return `${label}：${value}`;
 }
 
 function groupCount(items, field) {
@@ -145,7 +162,7 @@ function render() {
         <td>${display(row.mainDirection || row["主营方向"])}</td>
         <td>${display(row.latestRound || row["最新融资轮次"])}</td>
         <td>${formatValue(row.latestValuation, " 亿")}</td>
-        <td>${formatValue(row.cumulativeFunding, " 亿")}</td>
+        <td>${row.cumulativeFunding > 0 ? formatValue(row.cumulativeFunding, " 亿") : displayAmountRange("累计量级", row.cumulativeFundingRange)}</td>
         <td>${formatValue(row.latestRoundAmount, " 亿")}</td>
         <td>${display(row.investors || row["投资方"])}</td>
       </tr>
