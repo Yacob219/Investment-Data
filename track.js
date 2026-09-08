@@ -6,6 +6,10 @@ const rows = Array.isArray(window.dashboardTrackData)
     : [];
 const params = new URLSearchParams(window.location.search);
 const selectedTrack = params.get("track") || "全栈";
+let sortState = {
+  key: "latestValuation",
+  direction: "desc",
+};
 
 if ("scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -47,6 +51,60 @@ function display(value) {
 function displayAmountRange(label, value) {
   if (!value || value === "未知") return "未披露";
   return `${label}：${value}`;
+}
+
+function numericValue(value) {
+  const number = Number(value);
+  return Number.isFinite(number) && number > 0 ? number : null;
+}
+
+function rangeValue(value) {
+  if (!value || value === "未知") return null;
+  const numbers = String(value)
+    .match(/\d+(?:\.\d+)?/g)
+    ?.map(Number)
+    .filter((number) => Number.isFinite(number));
+
+  if (!numbers?.length) return null;
+  if (numbers.length === 1) return numbers[0];
+  return (Math.min(...numbers) + Math.max(...numbers)) / 2;
+}
+
+function sortableValue(row, key) {
+  if (key === "cumulativeFunding") {
+    return numericValue(row.cumulativeFunding) ?? rangeValue(row.cumulativeFundingRange);
+  }
+  return numericValue(row[key]);
+}
+
+function compareNames(a, b) {
+  return String(a.companyName || "").localeCompare(String(b.companyName || ""), "zh-CN", {
+    numeric: true,
+    sensitivity: "base",
+  });
+}
+
+function compareRows(a, b) {
+  const primaryA = sortableValue(a, sortState.key);
+  const primaryB = sortableValue(b, sortState.key);
+  const missingA = primaryA === null;
+  const missingB = primaryB === null;
+
+  if (missingA !== missingB) return missingA ? 1 : -1;
+
+  if (!missingA && primaryA !== primaryB) {
+    return sortState.direction === "asc" ? primaryA - primaryB : primaryB - primaryA;
+  }
+
+  const valuationA = sortableValue(a, "latestValuation");
+  const valuationB = sortableValue(b, "latestValuation");
+  const valuationMissingA = valuationA === null;
+  const valuationMissingB = valuationB === null;
+
+  if (valuationMissingA !== valuationMissingB) return valuationMissingA ? 1 : -1;
+  if (!valuationMissingA && valuationA !== valuationB) return valuationB - valuationA;
+
+  return compareNames(a, b);
 }
 
 function getTrack(item) {
@@ -144,7 +202,7 @@ function closeDetail() {
 function render() {
   const trackRows = rows
     .filter((row) => getTrack(row) === selectedTrack)
-    .sort((a, b) => (Number(b.latestValuation) || 0) - (Number(a.latestValuation) || 0));
+    .sort(compareRows);
 
   document.getElementById("trackTitle").textContent = selectedTrack;
   document.getElementById("trackSubtitle").textContent = `${selectedTrack}主赛道公司列表，默认按最新估值排序。`;
@@ -170,6 +228,35 @@ function render() {
   tbody.querySelectorAll(".company-link").forEach((button) => {
     button.addEventListener("click", () => openDetail(trackRows[Number(button.dataset.index)]));
   });
+
+  updateSortButtons();
+}
+
+function updateSortButtons() {
+  document.querySelectorAll(".sort-button").forEach((button) => {
+    const isActive = button.dataset.sort === sortState.key;
+    const direction = isActive ? sortState.direction : "none";
+    const icon = isActive ? (sortState.direction === "asc" ? "↑" : "↓") : "↕";
+
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-sort", direction === "none" ? "none" : direction === "asc" ? "ascending" : "descending");
+    button.querySelector("span").textContent = icon;
+  });
+}
+
+function setupSorting() {
+  document.querySelectorAll(".sort-button").forEach((button) => {
+    button.addEventListener("click", () => {
+      const key = button.dataset.sort;
+      if (sortState.key === key) {
+        sortState.direction = sortState.direction === "desc" ? "asc" : "desc";
+      } else {
+        sortState = { key, direction: "desc" };
+      }
+      render();
+    });
+  });
+  updateSortButtons();
 }
 
 document.getElementById("closeDetail").addEventListener("click", closeDetail);
@@ -179,4 +266,5 @@ document.addEventListener("keydown", (event) => {
 });
 
 setupTrackNav();
+setupSorting();
 render();
