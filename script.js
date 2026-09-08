@@ -10,7 +10,7 @@ const navRows = Array.isArray(window.dashboardTrackData) ? window.dashboardTrack
 const ipoRows = Array.isArray(window.dashboardIpoData) ? window.dashboardIpoData : [];
 const ipoStages = Array.isArray(window.dashboardIpoStages)
   ? window.dashboardIpoStages
-  : ["拟IPO筹备", "辅导备案/已递表", "正式受理排队", "近期已挂牌"];
+  : ["拟IPO筹备", "辅导备案/已递表", "正式受理排队", "近期已上市"];
 const ipoCategories = Array.isArray(window.dashboardIpoCategories)
   ? window.dashboardIpoCategories
   : ["四足", "人形", "通用全栈", "产业链上下游"];
@@ -247,17 +247,16 @@ function setupIpoChart() {
         ${category}（${categoryCounts.get(category) || 0}家）
       </span>
     `)
-    .join("") + `<span class="ipo-direction">越靠右越接近挂牌上市</span>`;
+    .join("");
 
   chart.innerHTML = `
-    <div class="ipo-stage-head" style="grid-template-columns: 160px repeat(${ipoStages.length}, minmax(190px, 1fr));">
+    <div class="ipo-stage-head" style="grid-template-columns: 160px minmax(260px, 1.45fr) minmax(260px, 1.45fr) minmax(260px, 1.45fr) minmax(108px, 0.58fr);">
       <span></span>
       ${ipoStages.map((stage) => `<b>${stage} · ${stageCounts.get(stage) || 0} 家</b>`).join("")}
     </div>
-    <div class="ipo-grid" style="grid-template-columns: 160px repeat(${ipoStages.length}, minmax(190px, 1fr));">
+    <div class="ipo-grid" style="grid-template-columns: 160px minmax(260px, 1.45fr) minmax(260px, 1.45fr) minmax(260px, 1.45fr) minmax(108px, 0.58fr);">
       ${ipoCategories.map((category) => makeIpoRow(category)).join("")}
     </div>
-    <div class="ipo-axis">IPO 推进方向</div>
   `;
 
   chart.querySelectorAll(".ipo-company").forEach((button) => {
