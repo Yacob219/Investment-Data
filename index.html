@@ -5,6 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Investment Data Dashboard</title>
     <link rel="stylesheet" href="styles.css" />
+    <style>
+      .ipo-meta {
+        margin-bottom: 14px;
+      }
+
+      .ipo-legend-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .ipo-direction,
+      .ipo-axis {
+        display: none;
+      }
+
+      .ipo-chart {
+        background: linear-gradient(90deg, rgba(247, 250, 255, 0.88) 0 31%, rgba(235, 244, 249, 0.8) 31% 62%, rgba(232, 241, 246, 0.86) 62% 93%, rgba(255, 252, 244, 0.82) 93% 100%);
+      }
+
+      .ipo-stage-head b:last-child {
+        margin-left: 8px;
+        margin-right: 8px;
+        background: rgba(255, 248, 229, 0.86);
+        color: #b87913;
+        box-shadow: inset 0 0 0 1px rgba(239, 211, 149, 0.78);
+      }
+
+      .ipo-method {
+        margin: 14px 4px 0;
+        color: #6f7a89;
+        font-size: 13px;
+        line-height: 1.7;
+      }
+    </style>
   </head>
   <body>
     <aside class="side-rail" aria-label="主赛道导航">
