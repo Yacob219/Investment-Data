@@ -29,7 +29,7 @@ const mainTracks = Array.isArray(window.dashboardTracks)
   : ["全栈", "本体", "场景机器人", "具身大脑", "世界模型", "数据采集", "物理仿真", "机械臂", "灵巧手", "关节模组", "触觉传感器", "视觉感知", "仿生脸"];
 
 function formatNumber(value, digits = 1) {
-  if (!Number.isFinite(value)) return "--";
+  if (!Number.isFinite(value)) return "未披露";
   const rounded = Number(value.toFixed(digits));
   return rounded.toLocaleString("zh-CN");
 }
