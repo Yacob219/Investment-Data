@@ -22,15 +22,31 @@
       }
 
       .ipo-chart {
-        background: linear-gradient(90deg, rgba(247, 250, 255, 0.88) 0 31%, rgba(235, 244, 249, 0.8) 31% 62%, rgba(232, 241, 246, 0.86) 62% 93%, rgba(255, 252, 244, 0.82) 93% 100%);
+        position: relative;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0 10%, rgba(249, 249, 248, 0.78) 10% 36%, rgba(255, 255, 255, 0) 36% 39%, rgba(238, 245, 248, 0.82) 39% 65%, rgba(255, 255, 255, 0) 65% 68%, rgba(232, 241, 245, 0.86) 68% 93%, rgba(255, 255, 255, 0) 93% 100%);
+      }
+
+      .ipo-grid {
+        position: relative;
+      }
+
+      .ipo-grid::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: calc(160px + (100% - 160px) * 0.93);
+        border-left: 2px dashed #d69a21;
+        pointer-events: none;
       }
 
       .ipo-stage-head b:last-child {
+        align-self: center;
         margin-left: 8px;
         margin-right: 8px;
-        background: rgba(255, 248, 229, 0.86);
+        background: transparent;
         color: #b87913;
-        box-shadow: inset 0 0 0 1px rgba(239, 211, 149, 0.78);
+        box-shadow: none;
       }
 
       .ipo-method {
