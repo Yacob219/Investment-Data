@@ -22,20 +22,15 @@ const mainTracks = Array.isArray(window.dashboardTracks)
   ? window.dashboardTracks
   : ["全栈", "本体", "场景机器人", "具身大脑", "世界模型", "数据采集", "物理仿真", "机械臂", "灵巧手", "关节模组", "触觉传感器", "视觉感知", "仿生脸"];
 const trackExtras = Array.isArray(window.dashboardTrackExtras) ? window.dashboardTrackExtras : [];
-const extraByKey = new Map(trackExtras.map(([companyName, mainTrack, mainDirection, investors]) => [
+const extraByKey = new Map(trackExtras.map(([companyName, mainTrack, mainDirection]) => [
   `${companyName}::${mainTrack}`,
-  { mainDirection, investors },
+  { mainDirection },
 ]));
-
-function getTrack(item) {
-  return item.mainTrack || item.companyCategory || item["主赛道"] || item["公司分类"] || "未知";
-}
 
 rows.forEach((row) => {
   const extra = extraByKey.get(`${row.companyName}::${getTrack(row)}`);
   if (!extra) return;
   row.mainDirection = row.mainDirection || extra.mainDirection;
-  row.investors = row.investors || extra.investors;
 });
 
 function formatValue(value, suffix = "") {
@@ -52,6 +47,10 @@ function display(value) {
 function displayAmountRange(label, value) {
   if (!value || value === "未知") return "未披露";
   return `${label}：${value}`;
+}
+
+function getTrack(item) {
+  return item.mainTrack || item.companyCategory || item["主赛道"] || item["公司分类"] || "未知";
 }
 
 function groupCount(items, field) {
@@ -156,15 +155,14 @@ function render() {
   tbody.innerHTML = trackRows
     .map((row, index) => `
       <tr>
-        <td><button class="company-link" type="button" data-index="${index}">${display(row.companyName)}</button></td>
-        <td>${getRegion(row)}</td>
-        <td>${display(row.foundedYear || row["成立年份"])}</td>
-        <td>${display(row.mainDirection || row["主营方向"])}</td>
-        <td>${display(row.latestRound || row["最新融资轮次"])}</td>
-        <td>${formatValue(row.latestValuation, " 亿")}</td>
-        <td>${row.cumulativeFunding > 0 ? formatValue(row.cumulativeFunding, " 亿") : displayAmountRange("累计量级", row.cumulativeFundingRange)}</td>
-        <td>${formatValue(row.latestRoundAmount, " 亿")}</td>
-        <td>${display(row.investors || row["投资方"])}</td>
+        <td><button class="company-link cell-text" type="button" data-index="${index}">${display(row.companyName)}</button></td>
+        <td><span class="cell-text">${getRegion(row)}</span></td>
+        <td><span class="cell-text">${display(row.foundedYear || row["成立年份"])}</span></td>
+        <td><span class="cell-text">${display(row.mainDirection || row["主营方向"])}</span></td>
+        <td><span class="cell-text">${display(row.latestRound || row["最新融资轮次"])}</span></td>
+        <td><span class="cell-text">${formatValue(row.latestValuation, " 亿")}</span></td>
+        <td><span class="cell-text">${row.cumulativeFunding > 0 ? formatValue(row.cumulativeFunding, " 亿") : displayAmountRange("累计量级", row.cumulativeFundingRange)}</span></td>
+        <td><span class="cell-text">${formatValue(row.latestRoundAmount, " 亿")}</span></td>
       </tr>
     `)
     .join("");
