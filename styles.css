@@ -970,6 +970,10 @@ canvas {
     display: none;
   }
 
+  .rail-home {
+    display: none;
+  }
+
   .rail-track-list {
     display: flex;
     gap: 8px;
