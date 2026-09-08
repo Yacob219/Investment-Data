@@ -7,6 +7,19 @@ const rows = Array.isArray(window.dashboardHomeData)
     ? window.dashboardData
     : [];
 const navRows = Array.isArray(window.dashboardTrackData) ? window.dashboardTrackData : rows;
+const ipoRows = Array.isArray(window.dashboardIpoData) ? window.dashboardIpoData : [];
+const ipoStages = Array.isArray(window.dashboardIpoStages)
+  ? window.dashboardIpoStages
+  : ["拟IPO筹备", "辅导备案/已递表", "正式受理排队", "近期已挂牌"];
+const ipoCategories = Array.isArray(window.dashboardIpoCategories)
+  ? window.dashboardIpoCategories
+  : ["四足", "人形", "通用全栈", "产业链上下游"];
+const ipoColors = {
+  四足: "#1f8fff",
+  人形: "#126a9c",
+  通用全栈: "#c57a1c",
+  产业链上下游: "#7357b8",
+};
 
 if ("scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -32,6 +45,12 @@ function formatNumber(value, digits = 1) {
   if (!Number.isFinite(value)) return "未披露";
   const rounded = Number(value.toFixed(digits));
   return rounded.toLocaleString("zh-CN");
+}
+
+function displayMetric(value, unit = "亿元") {
+  if (value === null || value === undefined || value === "" || value === "未披露") return "未披露";
+  if (typeof value === "number") return `${formatNumber(value, 1)} ${unit}`;
+  return `${value} ${unit}`;
 }
 
 function sumBy(items, field) {
@@ -210,6 +229,108 @@ function setupTrackNav() {
       `;
     })
     .join("");
+}
+
+function setupIpoChart() {
+  const chart = document.getElementById("ipoChart");
+  const legend = document.getElementById("ipoLegend");
+  const popover = document.getElementById("ipoPopover");
+  if (!chart || !legend || !popover || !ipoRows.length) return;
+
+  const categoryCounts = groupCount(ipoRows, "category");
+  const stageCounts = groupCount(ipoRows, "stage");
+
+  legend.innerHTML = ipoCategories
+    .map((category) => `
+      <span class="ipo-legend-item">
+        <i style="background:${ipoColors[category] || blue}"></i>
+        ${category}（${categoryCounts.get(category) || 0}家）
+      </span>
+    `)
+    .join("") + `<span class="ipo-direction">越靠右越接近挂牌上市</span>`;
+
+  chart.innerHTML = `
+    <div class="ipo-stage-head" style="grid-template-columns: 160px repeat(${ipoStages.length}, minmax(190px, 1fr));">
+      <span></span>
+      ${ipoStages.map((stage) => `<b>${stage} · ${stageCounts.get(stage) || 0} 家</b>`).join("")}
+    </div>
+    <div class="ipo-grid" style="grid-template-columns: 160px repeat(${ipoStages.length}, minmax(190px, 1fr));">
+      ${ipoCategories.map((category) => makeIpoRow(category)).join("")}
+    </div>
+    <div class="ipo-axis">IPO 推进方向</div>
+  `;
+
+  chart.querySelectorAll(".ipo-company").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      const item = ipoRows.find((row) => String(row.id) === button.dataset.id);
+      if (!item) return;
+      showIpoPopover(item, event.currentTarget, popover);
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    if (popover.hidden) return;
+    if (popover.contains(event.target) || event.target.closest(".ipo-company")) return;
+    popover.hidden = true;
+  });
+}
+
+function makeIpoRow(category) {
+  const items = ipoRows.filter((item) => item.category === category);
+  const cells = ipoStages.map((stage) => {
+    const stageItems = items.filter((item) => item.stage === stage);
+    return `
+      <div class="ipo-cell">
+        ${stageItems.map((item, index) => makeIpoPoint(item, index, stageItems.length)).join("")}
+      </div>
+    `;
+  }).join("");
+
+  return `
+    <div class="ipo-category">
+      <strong style="color:${ipoColors[category] || blue}">${category}</strong>
+      <span>${items.length} 家</span>
+    </div>
+    ${cells}
+  `;
+}
+
+function makeIpoPoint(item, index, total) {
+  const color = ipoColors[item.category] || blue;
+  const offset = total <= 1 ? 50 : 12 + (index * 76) / (total - 1);
+  const isAbove = index % 2 === 0;
+  return `
+    <button class="ipo-company ${isAbove ? "is-above" : "is-below"}" type="button" data-id="${item.id}" style="left:${offset}%; --ipo-color:${color}">
+      <span></span>
+      <b>${item.company}</b>
+      <small>${item.board}</small>
+    </button>
+  `;
+}
+
+function showIpoPopover(item, anchor, popover) {
+  const rect = anchor.getBoundingClientRect();
+  popover.innerHTML = `
+    <div class="ipo-popover-head">
+      <span>${item.category} · ${item.stage}</span>
+      <strong>${item.company}</strong>
+    </div>
+    <dl>
+      <div><dt>拟上市/挂牌板块</dt><dd>${item.board || "未披露"}</dd></div>
+      <div><dt>核心业务</dt><dd>${item.business || "未披露"}</dd></div>
+      <div><dt>上市前累计融资额</dt><dd>${displayMetric(item.preIpoFunding)}</dd></div>
+      <div><dt>一级市场估值</dt><dd>${displayMetric(item.primaryValuation)}</dd></div>
+    </dl>
+  `;
+  popover.hidden = false;
+
+  const width = Math.min(360, window.innerWidth - 28);
+  popover.style.width = `${width}px`;
+  let left = rect.left + rect.width / 2 - width / 2;
+  left = Math.max(14, Math.min(left, window.innerWidth - width - 14));
+  const top = rect.bottom + 14 > window.innerHeight - 260 ? rect.top - 250 : rect.bottom + 14;
+  popover.style.left = `${left}px`;
+  popover.style.top = `${Math.max(14, top)}px`;
 }
 
 function setupCanvas(canvas) {
@@ -411,6 +532,7 @@ function attachTooltips() {
 
 updateKpis();
 setupTrackNav();
+setupIpoChart();
 drawAll();
 attachTooltips();
 window.addEventListener("resize", drawAll);
