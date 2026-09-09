@@ -15,10 +15,10 @@ const ipoCategories = Array.isArray(window.dashboardIpoCategories)
   ? window.dashboardIpoCategories
   : ["四足", "人形", "通用全栈", "产业链上下游"];
 const ipoColors = {
-  四足: "#4aa86b",
-  人形: "#2b7194",
-  通用全栈: "#d88428",
-  产业链上下游: "#7a59b5",
+  四足: "#56b7ff",
+  人形: "#2f8fe8",
+  通用全栈: "#1f6fca",
+  产业链上下游: "#184f9f",
 };
 const ipoGridColumns = "160px repeat(3, minmax(260px, 1fr)) minmax(150px, 0.42fr)";
 
@@ -298,7 +298,7 @@ function makeIpoRow(category) {
 function makeIpoPoint(item, index, total) {
   const color = ipoColors[item.category] || blue;
   const isListed = item.stage === ipoStages[ipoStages.length - 1];
-  const offset = isListed ? 0 : total <= 1 ? 50 : 12 + (index * 76) / (total - 1);
+  const offset = isListed ? 50 : total <= 1 ? 50 : 12 + (index * 76) / (total - 1);
   const isAbove = index % 2 === 0;
   return `
     <button class="ipo-company ${isAbove ? "is-above" : "is-below"} ${isListed ? "is-listed" : ""}" type="button" data-id="${item.id}" style="left:${offset}%; --ipo-color:${color}">
