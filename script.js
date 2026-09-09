@@ -15,10 +15,10 @@ const ipoCategories = Array.isArray(window.dashboardIpoCategories)
   ? window.dashboardIpoCategories
   : ["四足", "人形", "通用全栈", "产业链上下游"];
 const ipoColors = {
-  四足: "#56b7ff",
-  人形: "#2f8fe8",
-  通用全栈: "#1f6fca",
-  产业链上下游: "#184f9f",
+  四足: "#49aa72",
+  人形: "#2d7898",
+  通用全栈: "#d88326",
+  产业链上下游: "#3c83d8",
 };
 const ipoGridColumns = "160px repeat(3, minmax(260px, 1fr)) minmax(150px, 0.42fr)";
 
