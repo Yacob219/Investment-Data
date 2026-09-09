@@ -31,6 +31,7 @@ window.dashboardIpoData = [
   { id: 29, category: "产业链上下游", company: "斯坦德", stage: "正式受理排队", board: "港股", business: "工业AMR、调度系统及智能移动机器人解决方案", preIpoFunding: 9.8, primaryValuation: 21 },
   { id: 30, category: "产业链上下游", company: "越疆科技", stage: "正式受理排队", board: "创业板", business: "协作机器人、工业机械臂及自动化解决方案", preIpoFunding: 6.8, primaryValuation: 120 },
   { id: 31, category: "产业链上下游", company: "睿尔曼智能", stage: "辅导备案/已递表", board: "创业板", business: "超轻量机械臂、一体化关节模组及轮式机器人", preIpoFunding: 5, primaryValuation: 32 },
+  { id: 32, category: "产业链上下游", company: "珞石机器人", stage: "近期已上市", board: "港股", business: "轻量化协作机器人、工业机械臂、力控与机器人自动化解决方案", preIpoFunding: 7.53, primaryValuation: 105.43 },
 ];
 window.dashboardIpoStages = ["拟IPO筹备", "辅导备案/已递表", "正式受理排队", "近期已上市"];
 window.dashboardIpoCategories = ["四足", "人形", "通用全栈", "产业链上下游"];
