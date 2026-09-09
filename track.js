@@ -1,4 +1,3 @@
-const DETAIL_EMPTY_TEXT = "小编正在全速补充中";
 const rows = Array.isArray(window.dashboardTrackData)
   ? window.dashboardTrackData
   : Array.isArray(window.dashboardData)
@@ -149,68 +148,14 @@ function getRegion(row) {
   return region || display(row.area || row["地区"]);
 }
 
-function readDetail(row, key) {
-  const aliases = {
-    intro: ["companyIntro", "公司简介"],
-    team: ["companyTeam", "公司团队"],
-    product: ["companyProduct", "公司产品"],
-    cooperation: ["majorCooperation", "公司重大合作"],
-    website: ["website", "官网链接"],
-    news: ["fundingNews", "融资报道链接"],
-  };
-  const found = aliases[key].map((field) => row[field]).find((value) => value);
-  return found || "";
-}
-
-function makeLinks(raw, labelPrefix) {
-  const links = String(raw || "")
-    .split(/\n|,|，/)
-    .map((item) => item.trim())
-    .filter(Boolean);
-
-  if (!links.length) return `<p>${DETAIL_EMPTY_TEXT}</p>`;
-
-  return `<div class="link-list">${links
-    .map((url, index) => {
-      const text = labelPrefix === "官网" ? "访问官网" : `报道 ${index + 1}`;
-      return `<a href="${url}" target="_blank" rel="noreferrer">${text}</a>`;
-    })
-    .join("")}</div>`;
-}
-
-function detailBlock(title, content) {
-  return `<section class="detail-block"><h3>${title}</h3><p>${content || DETAIL_EMPTY_TEXT}</p></section>`;
-}
-
-function openDetail(row) {
-  document.getElementById("detailName").textContent = row.companyName || "公司详情";
-  document.getElementById("detailContent").innerHTML = [
-    detailBlock("公司简介", readDetail(row, "intro")),
-    detailBlock("公司团队", readDetail(row, "team")),
-    detailBlock("公司产品", readDetail(row, "product")),
-    detailBlock("公司重大合作", readDetail(row, "cooperation")),
-    `<section class="detail-block"><h3>官网链接</h3>${makeLinks(readDetail(row, "website"), "官网")}</section>`,
-    `<section class="detail-block"><h3>融资报道链接</h3>${makeLinks(readDetail(row, "news"), "报道")}</section>`,
-  ].join("");
-
-  document.getElementById("detailOverlay").hidden = false;
-  document.getElementById("detailDrawer").classList.add("is-open");
-  document.getElementById("detailDrawer").setAttribute("aria-hidden", "false");
-}
-
-function closeDetail() {
-  document.getElementById("detailOverlay").hidden = true;
-  document.getElementById("detailDrawer").classList.remove("is-open");
-  document.getElementById("detailDrawer").setAttribute("aria-hidden", "true");
-}
-
 function render() {
   const trackRows = rows
     .filter((row) => getTrack(row) === selectedTrack)
     .sort(compareRows);
 
   document.getElementById("trackTitle").textContent = selectedTrack;
-  document.getElementById("trackSubtitle").textContent = `${selectedTrack}主赛道公司列表，默认按最新估值排序。`;
+  document.getElementById("trackSubtitle").textContent =
+    "累计融资额综合公开披露与可估算信息；由于许多公司未完整披露金额，页面展示为便于横向比较的估计量级。";
   document.getElementById("tableTitle").textContent = `${selectedTrack}公司`;
   document.getElementById("emptyState").hidden = trackRows.length > 0;
 
@@ -218,7 +163,7 @@ function render() {
   tbody.innerHTML = trackRows
     .map((row, index) => `
       <tr>
-        <td><button class="company-link cell-text" type="button" data-index="${index}">${display(row.companyName)}</button></td>
+        <td><span class="company-name cell-text">${display(row.companyName)}</span></td>
         <td><span class="cell-text">${getRegion(row)}</span></td>
         <td><span class="cell-text">${display(row.foundedYear || row["成立年份"])}</span></td>
         <td><span class="cell-text">${display(row.mainDirection || row["主营方向"])}</span></td>
@@ -229,10 +174,6 @@ function render() {
       </tr>
     `)
     .join("");
-
-  tbody.querySelectorAll(".company-link").forEach((button) => {
-    button.addEventListener("click", () => openDetail(trackRows[Number(button.dataset.index)]));
-  });
 
   updateSortButtons();
 }
@@ -263,12 +204,6 @@ function setupSorting() {
   });
   updateSortButtons();
 }
-
-document.getElementById("closeDetail").addEventListener("click", closeDetail);
-document.getElementById("detailOverlay").addEventListener("click", closeDetail);
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") closeDetail();
-});
 
 setupTrackNav();
 setupSorting();
