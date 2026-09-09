@@ -7,6 +7,48 @@
   white-space: pre-line;
 }
 
+.company-name {
+  color: #111827;
+  font-weight: 850;
+}
+
+.track-stat-panel {
+  border: 1px solid rgba(207, 225, 255, 0.9);
+  border-radius: 22px;
+  padding: 22px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 20px 48px rgba(31, 61, 102, 0.08);
+}
+
+.track-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.track-stat-card {
+  min-height: 108px;
+  border: 1px solid rgba(214, 228, 248, 0.92);
+  border-radius: 18px;
+  padding: 18px;
+  background: linear-gradient(145deg, #ffffff 0%, #f4f8ff 100%);
+}
+
+.track-stat-card span {
+  display: block;
+  color: #788698;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.track-stat-card strong {
+  display: block;
+  margin-top: 14px;
+  color: #111827;
+  font-size: clamp(18px, 1.7vw, 26px);
+  line-height: 1.25;
+}
+
 .company-table th {
   position: sticky;
   top: 0;
@@ -25,4 +67,20 @@
 .company-table th:first-child {
   z-index: 5;
   background: #f7faff;
+}
+
+@media (max-width: 1100px) {
+  .track-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .track-stat-panel {
+    padding: 16px;
+  }
+
+  .track-stat-grid {
+    grid-template-columns: 1fr;
+  }
 }
