@@ -17,7 +17,7 @@ window.dashboardIpoData = [
   { id: 15, category: "通用全栈", company: "自变量", stage: "辅导备案/已递表", board: "港股", business: "WALL-A端到端统一具身大模型与WALL-B世界统一模型，面向家庭场景世界理解和操作", preIpoFunding: 45, primaryValuation: 200 },
   { id: 16, category: "通用全栈", company: "智平方", stage: "辅导备案/已递表", board: "港股", business: "AlphaBrain全域全身VLA，融合世界模型与Video2Act路线，支撑长程任务推理和泛化操作", preIpoFunding: 60, primaryValuation: 200 },
   { id: 17, category: "通用全栈", company: "星海图", stage: "辅导备案/已递表", board: "港股", business: "GalaxeaG0/G0.5通用具身模型，围绕VLA、世界动作模型与训练数据工具链构建模型平台", preIpoFunding: 50, primaryValuation: 200 },
-  { id: 18, category: "通用全栈", company: "智元机器人", stage: "辅导备案/已递表", board: "港股", business: "GO-1通用具身基座模型，ViLLA架构结合隐式规划、跨本体数据和持续进化闭环", preIpoFunding: 35, primaryValuation: 150 },
+  { id: 18, category: "通用全栈", company: "智元机器人", stage: "辅导备案/已递表", board: "港股", business: "远征、灵犀、精灵、酷拓等多形态机器人产品，覆盖运动智能、交互智能、作业智能、数据采集训练与AIMA开放平台", preIpoFunding: 35, primaryValuation: 150 },
   { id: 19, category: "通用全栈", company: "银河通用", stage: "辅导备案/已递表", board: "港股", business: "VLA到世界动作模型WAM路线，依托合成数据Scaling、大小脑控制与轮式双臂机器人闭环", preIpoFunding: 60, primaryValuation: 210 },
   { id: 20, category: "通用全栈", company: "优必选", stage: "近期已上市", board: "港股", business: "Thinker基座模型、Thinker-WM世界模型与Thinker-VLA行动模型，服务Walker人形机器人体系", preIpoFunding: 56.1, primaryValuation: 312 },
   { id: 21, category: "产业链上下游", company: "灵心巧手", stage: "拟IPO筹备", board: "港股", business: "LinkerHand高自由度灵巧手及具身操作技能平台", preIpoFunding: 35, primaryValuation: 200 },
