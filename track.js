@@ -59,7 +59,9 @@ function displayAmount(row, numericKey, displayKey, suffix = " 亿") {
 
 function displayStatAmount(row, numericKey, displayKey) {
   if (!row) return "未披露";
-  const value = displayAmount(row, numericKey, displayKey, " 亿");
+  const value = displayAmount(row, numericKey, displayKey, " 亿")
+    .replace(/^估值量级：\s*/u, "")
+    .replace(/^累计量级：\s*/u, "");
   return `${value}${row.companyName ? ` · ${row.companyName}` : ""}`;
 }
 
