@@ -342,7 +342,7 @@ function setupCanvas(canvas) {
   canvas.width = Math.round(rect.width * dpr);
   canvas.height = Math.round(height * dpr);
   const ctx = canvas.getContext("2d");
-  ctx.setTransform(dpr, 0, 0, dpr, 0, dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   return { ctx, width: rect.width, height };
 }
 
