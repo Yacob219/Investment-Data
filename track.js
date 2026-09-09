@@ -57,6 +57,12 @@ function displayAmount(row, numericKey, displayKey, suffix = " 亿") {
   return formatValue(row[numericKey], suffix);
 }
 
+function displayStatAmount(row, numericKey, displayKey) {
+  if (!row) return "未披露";
+  const value = displayAmount(row, numericKey, displayKey, " 亿");
+  return `${value}${row.companyName ? ` · ${row.companyName}` : ""}`;
+}
+
 function numericValue(value) {
   const number = Number(value);
   return Number.isFinite(number) && number > 0 ? number : null;
@@ -148,6 +154,49 @@ function getRegion(row) {
   return region || display(row.area || row["地区"]);
 }
 
+function getMaxRow(items, key) {
+  return items.reduce((best, row) => {
+    const value = sortableValue(row, key);
+    if (value === null) return best;
+    if (!best || value > best.value) return { row, value };
+    if (value === best.value && compareNames(row, best.row) < 0) return { row, value };
+    return best;
+  }, null);
+}
+
+function renderTrackStats(trackRows) {
+  const stats = document.getElementById("trackStats");
+  const cards = document.getElementById("trackStatCards");
+  if (!stats || !cards) return;
+
+  const maxValuation = getMaxRow(trackRows, "latestValuation");
+  const maxLatestRound = getMaxRow(trackRows, "latestRoundAmount");
+  const maxCumulativeFunding = getMaxRow(trackRows, "cumulativeFunding");
+  const hasMetric = Boolean(maxValuation || maxLatestRound || maxCumulativeFunding);
+
+  stats.hidden = !hasMetric;
+  if (!hasMetric) {
+    cards.innerHTML = "";
+    return;
+  }
+
+  const items = [
+    ["统计公司数", `${trackRows.length} 家`],
+    ["最高估值", displayStatAmount(maxValuation?.row, "latestValuation", "latestValuationDisplay")],
+    ["最高最新轮融资", displayStatAmount(maxLatestRound?.row, "latestRoundAmount", "latestRoundAmountDisplay")],
+    ["最高累计融资", displayStatAmount(maxCumulativeFunding?.row, "cumulativeFunding", "cumulativeFundingDisplay")],
+  ];
+
+  cards.innerHTML = items
+    .map(([label, value]) => `
+      <article class="track-stat-card">
+        <span>${label}</span>
+        <strong>${value}</strong>
+      </article>
+    `)
+    .join("");
+}
+
 function render() {
   const trackRows = rows
     .filter((row) => getTrack(row) === selectedTrack)
@@ -158,6 +207,7 @@ function render() {
     "累计融资额综合公开披露与可估算信息；由于许多公司未完整披露金额，页面展示为便于横向比较的估计量级。";
   document.getElementById("tableTitle").textContent = `${selectedTrack}公司`;
   document.getElementById("emptyState").hidden = trackRows.length > 0;
+  renderTrackStats(trackRows);
 
   const tbody = document.getElementById("companyRows");
   tbody.innerHTML = trackRows
