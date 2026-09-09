@@ -61,7 +61,7 @@
   bars('betweenList', 'betweenCount', between);
   document.getElementById('libraryRows').innerHTML = sorted.map(company => `<tr>
     <th scope="row">${escape(company.companyName)}</th>
-    <td>${company.tracks.map(track => `<a class="library-track-tag" href="track.html?track=${encodeURIComponent(track)}">${escape(track)}</a>`).join(' ')}</td>
+    <td>${company.tracks.map(track => `<a class="library-track-tag" href="track.html?track=${encodeURIComponent(track)}&v=20260909-navfix">${escape(track)}</a>`).join(' ')}</td>
     <td>${escape(company.area || '未披露')}</td><td>${escape(company.foundedYear || '未披露')}</td>
     <td class="library-direction">${escape(company.directions.join('；') || '未披露')}</td><td>${escape(company.latestRound || '未披露')}</td>
     <td>${valuationCell(company)}</td><td>${amount(company, 'cumulativeFunding', 'cumulativeFundingDisplay')}</td><td>${amount(company, 'latestRoundAmount', 'latestRoundAmountDisplay')}</td>

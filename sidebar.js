@@ -2,6 +2,7 @@
   const sidebar = document.getElementById('investmentSidebar');
   if (!sidebar) return;
   const icons = window.investSidebarIcons;
+  const navigationVersion = '20260909-navfix';
   const icon = (name) => `<span class="nav-icon" aria-hidden="true">${icons[name] || icons.layers}</span>`;
   const tracks = (window.dashboardTracks || []).filter(track => track !== 'IPO');
   const rows = window.dashboardTrackData || [];
@@ -19,13 +20,13 @@
   });
   function link(label, track, name, extraClass = '') {
     const active = track === selected;
-    const url = track === '__library__' ? 'library.html' : track === null ? 'index.html' : `track.html?track=${encodeURIComponent(track)}`;
+    const url = track === '__library__' ? `library.html?v=${navigationVersion}` : track === null ? `index.html?v=${navigationVersion}` : `track.html?track=${encodeURIComponent(track)}&v=${navigationVersion}`;
     return `<a class="nav-item ${extraClass}${active ? ' is-current' : ''}" href="${url}"${active ? ' aria-current="page"' : ''}>
       ${icon(name)}<span class="nav-label">${label}</span>${track === null || track === '__library__' ? '' : `<span class="nav-count" aria-label="${counts.get(track) || 0}家公司">${counts.get(track) || 0}</span>`}
     </a>`;
   }
   sidebar.innerHTML = `
-    <a class="nav-brand" href="index.html">${icon('layers')}<span>融资数据看板</span></a>
+    <a class="nav-brand" href="index.html?v=${navigationVersion}">${icon('layers')}<span>融资数据看板</span></a>
     <div class="nav-scroll">
       ${link('总览', null, 'layout-dashboard')}
       <details class="nav-group${tracks.includes(selected) ? ' has-current' : ''}" open>
