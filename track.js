@@ -53,6 +53,11 @@ function displayAmountRange(label, value) {
   return `${label}：${value}`;
 }
 
+function displayAmount(row, numericKey, displayKey, suffix = " 亿") {
+  if (row[displayKey]) return row[displayKey];
+  return formatValue(row[numericKey], suffix);
+}
+
 function numericValue(value) {
   const number = Number(value);
   return Number.isFinite(number) && number > 0 ? number : null;
@@ -218,9 +223,9 @@ function render() {
         <td><span class="cell-text">${display(row.foundedYear || row["成立年份"])}</span></td>
         <td><span class="cell-text">${display(row.mainDirection || row["主营方向"])}</span></td>
         <td><span class="cell-text">${display(row.latestRound || row["最新融资轮次"])}</span></td>
-        <td><span class="cell-text">${formatValue(row.latestValuation, " 亿")}</span></td>
-        <td><span class="cell-text">${row.cumulativeFunding > 0 ? formatValue(row.cumulativeFunding, " 亿") : displayAmountRange("累计量级", row.cumulativeFundingRange)}</span></td>
-        <td><span class="cell-text">${formatValue(row.latestRoundAmount, " 亿")}</span></td>
+        <td><span class="cell-text">${displayAmount(row, "latestValuation", "latestValuationDisplay", " 亿")}</span></td>
+        <td><span class="cell-text">${row.cumulativeFundingDisplay || (row.cumulativeFunding > 0 ? formatValue(row.cumulativeFunding, " 亿") : displayAmountRange("累计量级", row.cumulativeFundingRange))}</span></td>
+        <td><span class="cell-text">${displayAmount(row, "latestRoundAmount", "latestRoundAmountDisplay", " 亿")}</span></td>
       </tr>
     `)
     .join("");
