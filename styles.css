@@ -441,14 +441,10 @@ canvas {
 }
 
 .ipo-meta {
-  margin-bottom: 18px;
+  margin-bottom: 14px;
   color: #737d8c;
   font-size: 14px;
   line-height: 1.65;
-}
-
-.ipo-meta p {
-  margin: 8px 0 0;
 }
 
 .ipo-legend {
@@ -460,8 +456,7 @@ canvas {
   font-weight: 850;
 }
 
-.ipo-legend-item,
-.ipo-direction {
+.ipo-legend-item {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -474,20 +469,14 @@ canvas {
   box-shadow: 0 0 0 4px rgba(20, 127, 245, 0.08);
 }
 
-.ipo-direction {
-  padding-left: 16px;
-  border-left: 1px solid var(--line);
-  color: #6b7280;
-}
-
 .ipo-chart {
   min-width: 980px;
+  position: relative;
   overflow-x: auto;
   border: 1px solid #ebf0f7;
   border-radius: 18px;
   padding: 18px 22px 20px;
-  background:
-    linear-gradient(90deg, rgba(247, 250, 255, 0.86) 0 25%, rgba(235, 244, 249, 0.78) 25% 50%, rgba(232, 241, 246, 0.85) 50% 75%, rgba(255, 255, 255, 0.9) 75% 100%);
+  background: #fff;
 }
 
 .ipo-stage-head,
@@ -512,8 +501,48 @@ canvas {
   box-shadow: inset 0 0 0 1px rgba(214, 224, 235, 0.8);
 }
 
+.ipo-stage-head b:last-child {
+  align-self: center;
+  margin-left: 8px;
+  margin-right: 8px;
+  background: transparent;
+  color: #1f6fca;
+  box-shadow: none;
+}
+
 .ipo-grid {
+  position: relative;
   min-height: 560px;
+}
+
+.ipo-cell:nth-child(5n)::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  border-left: 2px dashed #d69a21;
+  transform: translateX(-1px);
+  pointer-events: none;
+}
+
+.ipo-stage-head b:nth-child(2),
+.ipo-cell:nth-child(5n + 2) {
+  background: linear-gradient(90deg, transparent 0 10px, rgba(247, 247, 246, 0.92) 10px calc(100% - 10px), transparent calc(100% - 10px));
+}
+
+.ipo-stage-head b:nth-child(3),
+.ipo-cell:nth-child(5n + 3) {
+  background: linear-gradient(90deg, transparent 0 10px, rgba(239, 247, 250, 0.94) 10px calc(100% - 10px), transparent calc(100% - 10px));
+}
+
+.ipo-stage-head b:nth-child(4),
+.ipo-cell:nth-child(5n + 4) {
+  background: linear-gradient(90deg, transparent 0 10px, rgba(231, 241, 245, 0.96) 10px calc(100% - 10px), transparent calc(100% - 10px));
+}
+
+.ipo-company.is-listed {
+  transform: translate(-50%, -50%);
 }
 
 .ipo-category,
@@ -532,16 +561,18 @@ canvas {
 
 .ipo-category strong {
   width: fit-content;
+  max-width: 150px;
   border-bottom: 4px solid currentColor;
   padding-bottom: 5px;
-  font-size: 22px;
+  font-size: 18px;
   line-height: 1.1;
+  white-space: nowrap;
 }
 
 .ipo-category span {
   margin-top: 10px;
   color: #8b95a5;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .ipo-cell {
@@ -611,11 +642,19 @@ canvas {
 }
 
 .ipo-axis {
+  display: none;
   margin-top: 10px;
   color: #687384;
   font-size: 13px;
   font-weight: 800;
   text-align: right;
+}
+
+.ipo-method {
+  margin: 14px 4px 0;
+  color: #6f7a89;
+  font-size: 13px;
+  line-height: 1.7;
 }
 
 .ipo-popover {
