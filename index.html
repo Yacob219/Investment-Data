@@ -23,7 +23,7 @@
 
       .ipo-chart {
         position: relative;
-        background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0 10%, rgba(249, 249, 248, 0.78) 10% 36%, rgba(255, 255, 255, 0) 36% 39%, rgba(238, 245, 248, 0.82) 39% 65%, rgba(255, 255, 255, 0) 65% 68%, rgba(232, 241, 245, 0.86) 68% 93%, rgba(255, 255, 255, 0) 93% 100%);
+        background: #fff;
       }
 
       .ipo-stage-head b:last-child {
@@ -57,10 +57,29 @@
         position: absolute;
         top: 0;
         bottom: 0;
-        left: 50%;
+        left: 0;
         border-left: 2px dashed #d69a21;
         transform: translateX(-1px);
         pointer-events: none;
+      }
+
+      .ipo-stage-head b:nth-child(2),
+      .ipo-cell:nth-child(5n + 2) {
+        background: rgba(249, 249, 248, 0.78);
+      }
+
+      .ipo-stage-head b:nth-child(3),
+      .ipo-cell:nth-child(5n + 3) {
+        background: rgba(238, 245, 248, 0.82);
+      }
+
+      .ipo-stage-head b:nth-child(4),
+      .ipo-cell:nth-child(5n + 4) {
+        background: rgba(232, 241, 245, 0.86);
+      }
+
+      .ipo-company.is-listed {
+        transform: translate(-50%, -50%);
       }
     </style>
   </head>
