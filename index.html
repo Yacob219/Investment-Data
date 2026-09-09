@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Investment Data Dashboard</title>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="ranking-cards.css?v=20260909-cards" />
     <style>
       .ipo-meta {
         margin-bottom: 14px;
@@ -130,7 +131,7 @@
           <article class="kpi-card">
             <span>赛道数量</span>
             <strong id="trackCount">--</strong>
-            <small>主赛道体系</small>
+            <small>主赛道体系（不含 IPO）</small>
           </article>
         </section>
 
@@ -245,6 +246,8 @@
     <script src="data.js"></script>
     <script src="data-ipo.js"></script>
     <script src="data-track-cleanup.js"></script>
-    <script src="script.js"></script>
+    <script src="data-ranking-details.js?v=20260909-cards"></script>
+    <script src="ranking-cards.js?v=20260909-cards"></script>
+    <script src="script.js?v=20260909-cards"></script>
   </body>
 </html>

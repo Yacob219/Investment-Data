@@ -1,0 +1,17 @@
+.ranking-chart { position: relative; }
+#latestRoundChart, #valuationTopChart, #fundingTopChart, #fullStackChart { height: 608px; }
+.ranking-chart-actions { position: absolute; inset: 0; pointer-events: none; }
+.ranking-chart-actions button { position: absolute; left: 0; width: 100%; border: 0; border-radius: 4px; background: transparent; cursor: pointer; pointer-events: auto; }
+.ranking-chart-actions button:hover { background: rgba(37, 183, 255, .08); }
+.ranking-chart-actions button:focus-visible { outline: 2px solid #1679b6; outline-offset: -2px; background: rgba(37, 183, 255, .1); }
+.ranking-chart-hint { color: #64748b; font-size: 14px; margin: -4px 0 10px; }
+.ranking-card { box-sizing: border-box; width: min(460px, calc(100vw - 32px)); max-height: calc(100dvh - 48px); padding: 24px; border: 1px solid #dce6ee; border-radius: 16px; color: #233247; background: #fff; box-shadow: 0 18px 70px #10203230; }
+.ranking-card::backdrop { background: #10203250; }
+.ranking-card-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.ranking-card h3 { margin: 0; font-size: 20px; }
+.ranking-card-close { flex: 0 0 36px; height: 36px; border: 0; border-radius: 50%; background: #f0f5f8; color: #41546a; font-size: 25px; cursor: pointer; }
+.ranking-card-note { font-size: 16px; line-height: 1.8; margin: 18px 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.ranking-card-sources { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 14px; border-top: 1px solid #e7edf2; padding-top: 16px; font-size: 14px; }
+.ranking-card-sources > span { color: #65758a; }
+.ranking-card-sources a, .live-valuation { color: #126da8; text-decoration: underline; text-underline-offset: 3px; }
+.ranking-card a:focus-visible, .ranking-card button:focus-visible, .live-valuation:focus-visible { outline: 2px solid #1679b6; outline-offset: 3px; }

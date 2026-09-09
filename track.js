@@ -6,7 +6,7 @@ const rows = Array.isArray(window.dashboardTrackData)
 const params = new URLSearchParams(window.location.search);
 const selectedTrack = params.get("track") || "全栈";
 let sortState = {
-  key: "latestValuation",
+  key: selectedTrack === "IPO" ? "companyName" : "latestValuation",
   direction: "desc",
 };
 
@@ -83,6 +83,7 @@ function rangeValue(value) {
 }
 
 function sortableValue(row, key) {
+  if (selectedTrack === "IPO" && key === "latestValuation") return null;
   if (key === "cumulativeFunding") {
     return numericValue(row.cumulativeFunding) ?? rangeValue(row.cumulativeFundingRange);
   }
@@ -97,6 +98,7 @@ function compareNames(a, b) {
 }
 
 function compareRows(a, b) {
+  if (sortState.key === "companyName") return compareNames(a, b);
   const primaryA = sortableValue(a, sortState.key);
   const primaryB = sortableValue(b, sortState.key);
   const missingA = primaryA === null;
@@ -188,6 +190,7 @@ function renderTrackStats(trackRows) {
     ["最高最新轮融资", displayStatAmount(maxLatestRound?.row, "latestRoundAmount", "latestRoundAmountDisplay")],
     ["最高累计融资", displayStatAmount(maxCumulativeFunding?.row, "cumulativeFunding", "cumulativeFundingDisplay")],
   ];
+  if (selectedTrack === "IPO") items.splice(1, 1);
 
   cards.innerHTML = items
     .map(([label, value]) => `
@@ -206,7 +209,9 @@ function render() {
 
   document.getElementById("trackTitle").textContent = selectedTrack;
   document.getElementById("trackSubtitle").textContent =
-    "累计融资额综合公开披露与可估算信息；由于许多公司未完整披露金额，页面展示为便于横向比较的估计量级。";
+    selectedTrack === "IPO"
+      ? "最新估值请点击“实时查看”打开东方财富行情页；累计融资额综合公开披露与可估算信息。"
+      : "累计融资额综合公开披露与可估算信息；由于许多公司未完整披露金额，页面展示为便于横向比较的估计量级。";
   document.getElementById("tableTitle").textContent = `${selectedTrack}公司`;
   document.getElementById("emptyState").hidden = trackRows.length > 0;
   renderTrackStats(trackRows);
@@ -220,7 +225,7 @@ function render() {
         <td><span class="cell-text">${display(row.foundedYear || row["成立年份"])}</span></td>
         <td><span class="cell-text">${display(row.mainDirection || row["主营方向"])}</span></td>
         <td><span class="cell-text">${display(row.latestRound || row["最新融资轮次"])}</span></td>
-        <td><span class="cell-text">${displayAmount(row, "latestValuation", "latestValuationDisplay", " 亿")}</span></td>
+        <td><span class="cell-text">${valuationCell(row)}</span></td>
         <td><span class="cell-text">${row.cumulativeFundingDisplay || (row.cumulativeFunding > 0 ? formatValue(row.cumulativeFunding, " 亿") : displayAmountRange("累计量级", row.cumulativeFundingRange))}</span></td>
         <td><span class="cell-text">${displayAmount(row, "latestRoundAmount", "latestRoundAmountDisplay", " 亿")}</span></td>
       </tr>
@@ -243,6 +248,10 @@ function updateSortButtons() {
 }
 
 function setupSorting() {
+  if (selectedTrack === "IPO") {
+    const valuationButton = document.querySelector('[data-sort="latestValuation"]');
+    valuationButton.parentElement.textContent = "最新估值";
+  }
   document.querySelectorAll(".sort-button").forEach((button) => {
     button.addEventListener("click", () => {
       const key = button.dataset.sort;
@@ -255,6 +264,12 @@ function setupSorting() {
     });
   });
   updateSortButtons();
+}
+
+function valuationCell(row) {
+  if (selectedTrack !== "IPO") return displayAmount(row, "latestValuation", "latestValuationDisplay", " 亿");
+  const url = window.dashboardIpoQuotes[row.companyName];
+  return url ? `<a class="live-valuation" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="${row.companyName}：实时查看">实时查看</a>` : "未提供行情链接";
 }
 
 setupTrackNav();

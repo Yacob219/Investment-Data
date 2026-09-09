@@ -136,14 +136,19 @@ function niceMax(values) {
 }
 
 function buildCharts() {
+  const rankingSeries = (id) => toChartSeries(
+    window.dashboardRankingDetails[id]
+      .map((item) => ({ label: item.company, value: item.value }))
+      .sort((a, b) => b.value - a.value),
+  );
   const valuationCount = makeCountSeries("valuationRange");
   const fundingRange = makeCountSeries("cumulativeFundingRange");
   const categoryFunding = toChartSeries(groupAverage(rows, getTrack, "cumulativeFunding"));
   const categoryValuation = toChartSeries(groupAverage(rows, getTrack, "latestValuation"));
-  const latestRound = makeTopSeries("latestRoundAmount");
-  const valuationTop = makeTopSeries("latestValuation");
-  const fundingTop = makeTopSeries("cumulativeFunding");
-  const fullStack = makeTopSeries("latestValuation", "全栈");
+  const latestRound = rankingSeries("latestRoundChart");
+  const valuationTop = rankingSeries("valuationTopChart");
+  const fundingTop = rankingSeries("fundingTopChart");
+  const fullStack = rankingSeries("fullStackChart");
 
   return [
     {
@@ -209,7 +214,7 @@ function updateKpis() {
   document.getElementById("companyCount").textContent = rows.length.toLocaleString("zh-CN");
   document.getElementById("averageValuation").textContent = formatNumber(averageValuation, 1);
   document.getElementById("averageFunding").textContent = formatNumber(averageFunding, 1);
-  document.getElementById("trackCount").textContent = mainTracks.length.toLocaleString("zh-CN");
+  document.getElementById("trackCount").textContent = mainTracks.filter((track) => track !== "IPO").length.toLocaleString("zh-CN");
 
 }
 
@@ -494,6 +499,7 @@ function drawHorizontalChart(config) {
   });
 
   hitAreas.set(config.id, areas);
+  window.renderRankingButtons(config, canvas, { top, rowHeight, height });
 }
 
 function drawAll() {
