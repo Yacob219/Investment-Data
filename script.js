@@ -20,6 +20,7 @@ const ipoColors = {
   通用全栈: "#d88428",
   产业链上下游: "#7a59b5",
 };
+const ipoGridColumns = "160px repeat(3, minmax(260px, 1fr)) minmax(150px, 0.42fr)";
 
 if ("scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -250,11 +251,11 @@ function setupIpoChart() {
     .join("");
 
   chart.innerHTML = `
-    <div class="ipo-stage-head" style="grid-template-columns: 160px minmax(260px, 1.45fr) minmax(260px, 1.45fr) minmax(260px, 1.45fr) minmax(108px, 0.58fr);">
+    <div class="ipo-stage-head" style="grid-template-columns: ${ipoGridColumns};">
       <span></span>
       ${ipoStages.map((stage) => `<b>${stage} · ${stageCounts.get(stage) || 0} 家</b>`).join("")}
     </div>
-    <div class="ipo-grid" style="grid-template-columns: 160px minmax(260px, 1.45fr) minmax(260px, 1.45fr) minmax(260px, 1.45fr) minmax(108px, 0.58fr);">
+    <div class="ipo-grid" style="grid-template-columns: ${ipoGridColumns};">
       ${ipoCategories.map((category) => makeIpoRow(category)).join("")}
     </div>
   `;
@@ -296,10 +297,11 @@ function makeIpoRow(category) {
 
 function makeIpoPoint(item, index, total) {
   const color = ipoColors[item.category] || blue;
-  const offset = total <= 1 ? 50 : 12 + (index * 76) / (total - 1);
+  const isListed = item.stage === ipoStages[ipoStages.length - 1];
+  const offset = isListed ? 0 : total <= 1 ? 50 : 12 + (index * 76) / (total - 1);
   const isAbove = index % 2 === 0;
   return `
-    <button class="ipo-company ${isAbove ? "is-above" : "is-below"}" type="button" data-id="${item.id}" style="left:${offset}%; --ipo-color:${color}">
+    <button class="ipo-company ${isAbove ? "is-above" : "is-below"} ${isListed ? "is-listed" : ""}" type="button" data-id="${item.id}" style="left:${offset}%; --ipo-color:${color}">
       <span></span>
       <b>${item.company}</b>
       <small>${item.board}</small>
@@ -340,7 +342,7 @@ function setupCanvas(canvas) {
   canvas.width = Math.round(rect.width * dpr);
   canvas.height = Math.round(height * dpr);
   const ctx = canvas.getContext("2d");
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, dpr);
   return { ctx, width: rect.width, height };
 }
 
