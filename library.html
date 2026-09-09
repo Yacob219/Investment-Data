@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>公司总库 · 具身智能融资数据看板</title>
+    <title>一级总库 · 具身智能融资数据看板</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="sidebar.css?v=20260909-nav" />
     <link rel="stylesheet" href="library.css?v=20260909-library" />
@@ -13,11 +13,11 @@
     <main class="dashboard library-page">
       <header class="hero">
         <p class="eyebrow">COMPANY LIBRARY · EMBODIED AI</p>
-        <h1>公司总库</h1>
-        <p class="hero-copy">汇总各赛道及 IPO 企业；同一家公司只计一次，保留跨赛道归属。</p>
+        <h1>一级总库</h1>
+        <p class="hero-copy">汇总各一级市场赛道公司，不纳入 IPO 企业；同一家公司只计一次，保留跨赛道归属。</p>
       </header>
-      <section class="library-stats" aria-label="总库统计">
-        <article class="library-stat"><span>统计公司数</span><div><strong id="libraryCompanyCount">--</strong><span>家</span></div><small>跨赛道去重，包含 IPO 企业</small></article>
+      <section class="library-stats" aria-label="一级总库统计">
+        <article class="library-stat"><span>统计公司数</span><div><strong id="libraryCompanyCount">--</strong><span>家</span></div><small>跨赛道去重，不含 IPO 企业</small></article>
         <article class="library-stat"><span>统计赛道数</span><div><strong id="libraryTrackCount">--</strong><span>个</span></div><small>IPO 不计入赛道数量</small></article>
       </section>
       <section class="library-valuations" aria-label="公司估值分布">
@@ -41,7 +41,7 @@
     <script src="data-track-cleanup.js"></script>
     <script src="data-ipo-quotes.js?v=20260909-cards"></script>
     <script src="sidebar-icons.js?v=20260909-nav"></script>
-    <script src="sidebar.js?v=20260909-library"></script>
-    <script src="library.js?v=20260909-library"></script>
+    <script src="sidebar.js?v=20260909-primary"></script>
+    <script src="library.js?v=20260909-primary"></script>
   </body>
 </html>

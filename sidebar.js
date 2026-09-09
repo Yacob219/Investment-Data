@@ -28,7 +28,7 @@
     <a class="nav-brand" href="index.html">${icon('layers')}<span>融资数据看板</span></a>
     <div class="nav-scroll">
       ${link('总览', null, 'layout-dashboard')}
-      ${link('总库', '__library__', 'database')}
+      ${link('一级总库', '__library__', 'database')}
       <details class="nav-group${tracks.includes(selected) ? ' has-current' : ''}" open>
         <summary>${icon('boxes')}<span class="nav-label">赛道分类</span><span class="nav-chevron">${icon('chevron-down')}</span></summary>
         <nav aria-label="赛道分类">${tracks.map(track => link(track === '具身Infra' ? '具身 Infra' : track, track, iconNames[track], 'nav-child')).join('')}</nav>

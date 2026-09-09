@@ -5,9 +5,10 @@
   const number = value => Number(value).toLocaleString('zh-CN', { maximumFractionDigits: 2 });
   const extras = new Map((window.dashboardTrackExtras || []).map(([name, track, direction]) => [name + '::' + track, direction]));
   const merged = new Map();
+  const ipoNames = new Set((window.dashboardTrackData || []).filter(row => trackOf(row) === 'IPO').map(row => String(row.companyName || '').trim()));
   (window.dashboardTrackData || []).forEach(row => {
     const name = String(row.companyName || '').trim();
-    if (!name) return;
+    if (!name || ipoNames.has(name)) return;
     const track = trackOf(row);
     let company = merged.get(name);
     if (!company) {
