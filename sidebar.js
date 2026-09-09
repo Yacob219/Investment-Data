@@ -5,7 +5,7 @@
   const icon = (name) => `<span class="nav-icon" aria-hidden="true">${icons[name] || icons.layers}</span>`;
   const tracks = (window.dashboardTracks || []).filter(track => track !== 'IPO');
   const rows = window.dashboardTrackData || [];
-  const selected = location.pathname.endsWith('track.html') ? new URLSearchParams(location.search).get('track') || '全栈' : null;
+  const selected = location.pathname.endsWith('library.html') ? '__library__' : location.pathname.endsWith('track.html') ? new URLSearchParams(location.search).get('track') || '全栈' : null;
   const iconNames = {
     '全栈': 'layers', '本体': 'bot', '灵巧手': 'hand', '世界模型': 'orbit',
     '数据采集': 'database', '仿真与合成数据': 'boxes', '触觉传感器': 'fingerprint-pattern',
@@ -19,16 +19,17 @@
   });
   function link(label, track, name, extraClass = '') {
     const active = track === selected;
-    const url = track === null ? 'index.html' : `track.html?track=${encodeURIComponent(track)}`;
+    const url = track === '__library__' ? 'library.html' : track === null ? 'index.html' : `track.html?track=${encodeURIComponent(track)}`;
     return `<a class="nav-item ${extraClass}${active ? ' is-current' : ''}" href="${url}"${active ? ' aria-current="page"' : ''}>
-      ${icon(name)}<span class="nav-label">${label}</span>${track === null ? '' : `<span class="nav-count" aria-label="${counts.get(track) || 0}家公司">${counts.get(track) || 0}</span>`}
+      ${icon(name)}<span class="nav-label">${label}</span>${track === null || track === '__library__' ? '' : `<span class="nav-count" aria-label="${counts.get(track) || 0}家公司">${counts.get(track) || 0}</span>`}
     </a>`;
   }
   sidebar.innerHTML = `
     <a class="nav-brand" href="index.html">${icon('layers')}<span>融资数据看板</span></a>
     <div class="nav-scroll">
       ${link('总览', null, 'layout-dashboard')}
-      <details class="nav-group${selected && selected !== 'IPO' ? ' has-current' : ''}" open>
+      ${link('总库', '__library__', 'database')}
+      <details class="nav-group${tracks.includes(selected) ? ' has-current' : ''}" open>
         <summary>${icon('boxes')}<span class="nav-label">赛道分类</span><span class="nav-chevron">${icon('chevron-down')}</span></summary>
         <nav aria-label="赛道分类">${tracks.map(track => link(track === '具身Infra' ? '具身 Infra' : track, track, iconNames[track], 'nav-child')).join('')}</nav>
       </details>

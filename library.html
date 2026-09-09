@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>公司总库 · 具身智能融资数据看板</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="sidebar.css?v=20260909-nav" />
+    <link rel="stylesheet" href="library.css?v=20260909-library" />
+  </head>
+  <body>
+    <aside class="investment-sidebar" id="investmentSidebar" aria-label="主导航"></aside>
+    <main class="dashboard library-page">
+      <header class="hero">
+        <p class="eyebrow">COMPANY LIBRARY · EMBODIED AI</p>
+        <h1>公司总库</h1>
+        <p class="hero-copy">汇总各赛道及 IPO 企业；同一家公司只计一次，保留跨赛道归属。</p>
+      </header>
+      <section class="library-stats" aria-label="总库统计">
+        <article class="library-stat"><span>统计公司数</span><div><strong id="libraryCompanyCount">--</strong><span>家</span></div><small>跨赛道去重，包含 IPO 企业</small></article>
+        <article class="library-stat"><span>统计赛道数</span><div><strong id="libraryTrackCount">--</strong><span>个</span></div><small>IPO 不计入赛道数量</small></article>
+      </section>
+      <section class="library-valuations" aria-label="公司估值分布">
+        <div class="library-section-head"><h2>公司估值榜单</h2><p>单位：亿元人民币。按当前收录估值降序排列，估计值保留原始口径；IPO 实时行情及最新估值未披露的公司不参与分组。</p></div>
+        <div class="library-chart-grid">
+          <article class="library-chart-panel"><header><h3>大于 100 亿元</h3><span id="over100Count"></span></header><ol id="over100List" class="library-bar-list" aria-label="估值大于100亿元的公司"></ol></article>
+          <article class="library-chart-panel"><header><h3>50–100 亿元</h3><span id="betweenCount"></span></header><p class="library-range-note">包含 50 亿元和 100 亿元</p><ol id="betweenList" class="library-bar-list" aria-label="估值50至100亿元的公司"></ol></article>
+        </div>
+      </section>
+      <section class="library-table-section" aria-labelledby="libraryTableTitle">
+        <div class="library-section-head"><h2 id="libraryTableTitle">全部公司</h2><p>跨赛道公司合并展示，融资与估值沿用分赛道页面的收录数据。</p></div>
+        <div class="library-table-wrap" role="region" aria-label="全部公司数据表，可横向滚动" tabindex="0">
+          <table class="library-table"><thead><tr><th>公司名称</th><th>所属赛道</th><th>地区/城市</th><th>成立年份</th><th>主营方向</th><th>最新融资轮次</th><th>最新估值</th><th>累计融资额</th><th>最新轮金额</th></tr></thead><tbody id="libraryRows"></tbody></table>
+        </div>
+      </section>
+    </main>
+    <script src="data.js"></script>
+    <script src="data-amount-overrides.js"></script>
+    <script src="data-extras-a.js"></script>
+    <script src="data-extras-b.js"></script>
+    <script src="data-track-cleanup.js"></script>
+    <script src="data-ipo-quotes.js?v=20260909-cards"></script>
+    <script src="sidebar-icons.js?v=20260909-nav"></script>
+    <script src="sidebar.js?v=20260909-library"></script>
+    <script src="library.js?v=20260909-library"></script>
+  </body>
+</html>
