@@ -26,20 +26,6 @@
         background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0 10%, rgba(249, 249, 248, 0.78) 10% 36%, rgba(255, 255, 255, 0) 36% 39%, rgba(238, 245, 248, 0.82) 39% 65%, rgba(255, 255, 255, 0) 65% 68%, rgba(232, 241, 245, 0.86) 68% 93%, rgba(255, 255, 255, 0) 93% 100%);
       }
 
-      .ipo-grid {
-        position: relative;
-      }
-
-      .ipo-grid::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: calc(160px + (100% - 160px) * 0.93);
-        border-left: 2px dashed #d69a21;
-        pointer-events: none;
-      }
-
       .ipo-stage-head b:last-child {
         align-self: center;
         margin-left: 8px;
@@ -54,6 +40,27 @@
         color: #6f7a89;
         font-size: 13px;
         line-height: 1.7;
+      }
+
+      .ipo-category strong {
+        max-width: 150px;
+        font-size: 18px;
+        white-space: nowrap;
+      }
+
+      .ipo-category span {
+        font-size: 13px;
+      }
+
+      .ipo-cell:nth-child(5n)::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        border-left: 2px dashed #d69a21;
+        transform: translateX(-1px);
+        pointer-events: none;
       }
     </style>
   </head>
